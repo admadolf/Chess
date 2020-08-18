@@ -12,6 +12,7 @@ public class MaterialMiniMaxEvaluateImpl implements Evaluate{
 	
 	@Override
 	public int evaluateMiniMax(Board board) {
+		System.out.println("evaulating material");
 		return materialHeuristic.evaluateMiniMax(board,movegen);
 	}
 

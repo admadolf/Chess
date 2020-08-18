@@ -15,18 +15,18 @@ public class ComplexMiniMaxEvaluateImpl implements Evaluate {
 	
 	@Override
 	public int evaluateMiniMax(Board position) {
-		Board board = Board.getBoardCloneNew(position);
+		Board board = Board.deepCopy(position);
 		List<Integer> side = movegen.getAll(Color.LIGHT, board);
 		List<Integer> oppositeSide = movegen.getAll(Color.DARK, board);
 		int valueSum = 0;
 		int oppositeValueSum = 0;
 		for (Integer coordinate : side) {
-			Piece piece = board.getBoardReference().get(coordinate);
+			Piece piece = board.getBoardMapReference().get(coordinate);
 			valueSum += materialValue.getValue(piece)
 					+ psTable.getPSTableValue(piece, coordinate);
 		}
 		for (Integer coordinate : oppositeSide) {
-			Piece piece = board.getBoardReference().get(coordinate);
+			Piece piece = board.getBoardMapReference().get(coordinate);
 			oppositeValueSum += materialValue.getValue(piece)
 					+ psTable.getPSTableValue(piece, coordinate);
 		}

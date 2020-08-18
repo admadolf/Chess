@@ -47,7 +47,7 @@ public class MoveGenerator {
 	 */
 	public List<Integer> generateMoves(Integer from, Board currentBoardState) {
 		List<Integer> moveList = new ArrayList<Integer>();
-		Map<Integer, Piece> boardMap = currentBoardState.getBoardClone();
+		Board boardMap = currentBoardState;
 		Piece piece = boardMap.get(from);
 		Color sideColor = piece.getColor();
 		switch (piece.getPieceType()) {
@@ -153,7 +153,7 @@ public class MoveGenerator {
 	 * @return all position of the given piece
 	 */
 	public List<Integer> getAll(Color color, PieceType pieceType, Board board) {
-		Stream<Entry<Integer, Piece>> boardStream = board.getBoardClone().entrySet().stream();
+		Stream<Entry<Integer, Piece>> boardStream = board.getBoardMapReference().entrySet().stream();
 		boardStream = boardStream.filter((e) -> e.getValue().getColor() == color);
 		boardStream = boardStream.filter((e) -> e.getValue().getPieceType() == pieceType);
 		return boardStream.map(Entry::getKey).collect(Collectors.toList());
@@ -168,16 +168,14 @@ public class MoveGenerator {
 	 * @return all position of the given piece
 	 */
 	public List<Integer> getAll(Color color, Board board) {
-		//TODO do we need to clone here?
-		Stream<Entry<Integer, Piece>> boardStream = board.getBoardClone().entrySet().stream();
+		Stream<Entry<Integer, Piece>> boardStream = board.getBoardMapReference().entrySet().stream();
 		boardStream = boardStream.filter((e) -> e.getValue().getColor() == color);
 		return boardStream.map(Entry::getKey).collect(Collectors.toList());
 	}
 	
 	public List<Integer> getAll(int pov, Board board) {
 		Color color = (pov == 1) ? Color.LIGHT : Color.DARK ;
-		//TODO do we need to clone here?
-		Stream<Entry<Integer, Piece>> boardStream = board.getBoardClone().entrySet().stream();
+		Stream<Entry<Integer, Piece>> boardStream = board.getBoardMapReference().entrySet().stream();
 		boardStream = boardStream.filter((e) -> e.getValue().getColor() == color);
 		return boardStream.map(Entry::getKey).collect(Collectors.toList());
 	}
@@ -220,17 +218,14 @@ public class MoveGenerator {
 		return movablePiecePositions;
 	}
 	
-	public List<Board> generatePositions(Board originalBoard, Color color) {
+	public List<Board> generatePositions(Board board, Color color) {
 		List<Board> positions = new ArrayList<>();
-		for (Integer from : getAllMovable(originalBoard, color)) {
-			for (Integer to : generateMoves(from, originalBoard)) {
-				Board nextBoard = Board.getBoardCloneNew(originalBoard);
+		for (Integer from : getAllMovable(board, color)) {
+			for (Integer to : generateMoves(from, board)) {
+				Board nextBoard = Board.deepCopy(board);
 				Piece piece = nextBoard.grabPieceAndCleanFrom(from);
-				nextBoard.setFrom(from);
-				nextBoard.setTo(to);
-				nextBoard.setPiece(piece);
 				nextBoard.place(piece, to);
-				nextBoard.setMove(new Move(from, to, piece, originalBoard.getBoardReference().get(to)));
+				nextBoard.setMove(new Move(from, to, piece, board.getBoardMapReference().get(to)));
 				positions.add(nextBoard);
 			}
 		}
@@ -240,12 +235,10 @@ public class MoveGenerator {
 	public List<Board> generatePositions(Board board, int from) {
 		List<Board> positions = new ArrayList<>();
 			for (Integer to : generateMoves(from, board)) {
-				Board nextBoard = Board.getBoardCloneNew(board);
-				Piece piece = Board.grabPieceAndCleanFrom(from, nextBoard);
-				nextBoard.setFrom(from);
-				nextBoard.setTo(to);
-				nextBoard.setPiece(piece);
-				Board.place(piece, to, nextBoard);
+				Board nextBoard = Board.deepCopy(board);
+				Piece piece = nextBoard.grabPieceAndCleanFrom(from);
+				nextBoard.setMove(new Move(from, to, piece, board.getBoardMapReference().get(to)));
+				nextBoard.place(piece, to);
 				positions.add(nextBoard);
 			}
 		return positions;
@@ -294,9 +287,9 @@ public class MoveGenerator {
 			to = random.nextInt(64);
 			isEmpty = Board.isEmptySquare(to, board);
 		}
-		result = new Board(board.getBoardClone());
-		Board.place(Board.grabPieceAndCleanFrom(from, board), to, result);
-		result.getBoardReference().put(from, new EmptyPiece());
+		result = Board.deepCopy(board);
+		result.place(board.grabPieceAndCleanFrom(from), to);
+		result.getBoardMapReference().put(from, new EmptyPiece());
 		return result;
 	}
 	
@@ -304,7 +297,7 @@ public class MoveGenerator {
 		List<Integer> pieceList = getAll(color, board);
 		Integer kingSquare = -1;
 		for (Integer key : pieceList) {
-			if(PieceType.KING == board.getBoardReference().get(key).getPieceType()) {
+			if(PieceType.KING == board.getBoardMapReference().get(key).getPieceType()) {
 				kingSquare = key;
 				break;
 			}
@@ -323,15 +316,15 @@ public class MoveGenerator {
 	 * the opposite color but same piece is found the initial square is being attacked by that kind of opposite color piece
 	 * @param square
 	 * @param piece
-	 * @param currentBoardState
+	 * @param board
 	 * @return
 	 */
-	public boolean isAttackedBy(final Integer square,final Piece piece,final Board currentBoardState) {
-		Board boardClone = Board.getBoardCloneNew(currentBoardState);
-		Board.place(piece, square, boardClone);
+	public boolean isAttackedBy(final Integer square,final Piece piece,final Board board) {
+		Board boardClone = Board.deepCopy(board);
+		boardClone.place(piece, square);
 		List<Integer> attackedList = generateMoves(square, boardClone);
 		for (Integer attacked : attackedList) {
-			Piece pieceOnAttackedSquare = boardClone.getBoardReference().get(attacked);
+			Piece pieceOnAttackedSquare = boardClone.getBoardMapReference().get(attacked);
 			Color colorOfAttacked = pieceOnAttackedSquare.getColor();
 			if(colorOfAttacked.opposite() == piece.getColor() && pieceOnAttackedSquare.getPieceType() == piece.getPieceType()) {
 				return true;

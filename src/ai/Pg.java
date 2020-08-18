@@ -17,21 +17,34 @@ public class Pg {
 	
 	public static void main(String[] args) {
 		Board board =  new Board();
-		secondExample(board);
+		firstExample(board);
 		
 		
 	}
+	
+	public static void testBoardMethods() {
+		Board board =  new Board();
+		board.initBoard();
+		
+		Board newBoard = Board.deepCopy(board);
+		
+		newBoard.grabPieceAndCleanFrom(0);
+		
+		System.out.println(board.toString());
+		System.out.println(newBoard.toString());
+	}
+	
 	
 	public static void firstExample(Board board) {
 		board.initEmptyBoard();
 		Evaluate evaluator = new MaterialMiniMaxEvaluateImpl();
 		
-		Board.place(new Rook(Color.LIGHT), 9, board);
-		Board.place(new Rook(Color.DARK), 11, board);
-		Board.place(new Queen(Color.DARK), 33, board);
-		Board.place(new Queen(Color.DARK), 34, board);
-		Board.place(new Queen(Color.DARK), 63, board);
-		Board.place(new Queen(Color.LIGHT), 7, board);
+		board.place(new Rook(Color.LIGHT), 9);
+		board.place(new Rook(Color.DARK), 11);
+		board.place(new Queen(Color.DARK), 33);
+		board.place(new Queen(Color.DARK), 34);
+		board.place(new Queen(Color.DARK), 63);
+		board.place(new Queen(Color.LIGHT), 7);
 		
 		
 		MiniMaxSearch miniMax = new MiniMaxSearch(board);
@@ -44,7 +57,7 @@ public class Pg {
 		int best = miniMax.maxi(1, evaluator, board, pvTree); //todo revisit this
 		
 		System.out.println("----------");
-		System.out.println(miniMax.getPvTree().getString());
+		System.out.println(miniMax.getPvTree().toString());
 		
 		System.out.println("best move: " + miniMax.getPvTree().getBestMove());
 		System.out.println("best position :\n " + miniMax.getPvTree().getPrincipalVariationFinalPosition());
@@ -67,7 +80,7 @@ public class Pg {
 		miniMax.setPvTree(pvTree);
 		int best = miniMax.mini(3, complexEval, board, pvTree);
 		System.out.println("----------");
-		System.out.println(miniMax.getPvTree().getString());
+		System.out.println(miniMax.getPvTree().toString());
 		
 		System.out.println("best move: " + miniMax.getPvTree().getBestMove());
 		System.out.println("best position :\n " + miniMax.getPvTree().getPrincipalVariationFinalPosition());

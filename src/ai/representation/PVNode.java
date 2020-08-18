@@ -49,15 +49,12 @@ public class PVNode {
 		this.value = value;
 	}
 
-	public void setDepth(Integer depth) {
-		this.depth = depth;
-	}
-
 	public void setParent(PVNode parent) {
 		this.parent = parent;
 	}
 
-	public String getString() {
+	@Override
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("level " + depth ).append(System.lineSeparator());
 		builder.append("move from parent ").append(move).append(System.lineSeparator());
@@ -66,7 +63,7 @@ public class PVNode {
 		builder.append(value.toString());
 		if (!children.isEmpty()) {
 			for (PVNode child : children) {
-				builder.append(child.getString());
+				builder.append(child.toString());
 			}
 		}
 		builder.append("node count: " + nodeCounter).append(System.lineSeparator());
