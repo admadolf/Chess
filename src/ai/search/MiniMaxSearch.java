@@ -34,6 +34,7 @@ public class MiniMaxSearch {
 
 	public int maxi(int depthLimit,Evaluate evaluator, Board position,PVNode parent) {
 		if(depth == depthLimit) {
+			System.out.println("a");
 			int result = evaluator.evaluateMiniMax(position);
 			return result;
 		}
@@ -55,9 +56,6 @@ public class MiniMaxSearch {
 			parent.addChild(child);
 			int score = mini.mini(depthLimit, evaluator, nextPosition, child);
 			child.setScore(score);
-			
-				
-			
 			child.setMove(nextPosition.getMove());
 			//child.getMove().setMoveRating(score); //uj
 			if(score > max) {
@@ -66,6 +64,7 @@ public class MiniMaxSearch {
 				parent.setBestMove(nextPosition.getMove());
 				//parent.addMoveToSet(child.getMove()); //uj
 				parent.setScore(score);
+				//this adds the next position to the root node at the last step of the minimax
 				parent.setPrincipalVariationFinalPosition(nextPosition);
 			}
 		}

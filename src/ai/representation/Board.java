@@ -16,11 +16,12 @@ import ai.representation.piece.Rook;
 
 public class Board {
 
-	private int from;
-	private int to;
 	private Move move;
-	private Piece piece;
 	
+	private boolean whiteQueenSideCastle;
+	private boolean whiteKingSideCastle;
+	private boolean darkQueenSideCastle;
+	private boolean darkKingSideCastle;
 	
 	private static String rankHeader = "  A  B  C  D  E  F  G  H";
 	private static String rankHeaderDelim ="  -- -- -- -- -- -- -- --";
@@ -47,7 +48,7 @@ public class Board {
 	
 	public Board(Map<Integer,Piece> boardMap) {
 		super();
-		this.board = boardMap;
+		this.board = new TreeMap<>(boardMap);
 	}
 	
 	public void initBoard() {
@@ -76,16 +77,13 @@ public class Board {
 		IntStream.range(0, 64).forEach((i) -> board.put(i, new EmptyPiece()));
 	}
 	
-	public Map<Integer, Piece> getBoardReference() {
+	
+	public Map<Integer, Piece> getBoardMapReference() {
 		return board;
 	}
 	
-	public Map<Integer, Piece> getBoardClone() {
-		return new TreeMap<>(board);
-	}
-	
-	public static Board getBoardCloneNew(Board board) {
-		return new Board(board.getBoardClone());
+	public static Board deepCopy(Board board) {
+		return new Board(board.getBoardMapReference());
 	}
 
 	@Override
@@ -116,16 +114,6 @@ public class Board {
 	}
 	
 	@SuppressWarnings(value = { "This might change the board" })
-	public static Piece grabPieceAndCleanFrom(int from, Board board) {
-		return board.board.put(from, new EmptyPiece());
-	}
-	
-	@SuppressWarnings(value = { "This might change the board" })
-	public static void place(Piece piece , int to, Board board) {
-		board.board.put(to, piece);
-	}
-	
-	@SuppressWarnings(value = { "This might change the board" })
 	public Piece grabPieceAndCleanFrom(int from) {
 		return this.board.put(from, new EmptyPiece());
 	}
@@ -135,30 +123,10 @@ public class Board {
 		this.board.put(to, piece);
 	}
 
-	public int getFrom() {
-		return from;
+	public Piece get(Integer key) {
+		return this.board.get(key);
 	}
-
-	public void setFrom(int from) {
-		this.from = from;
-	}
-
-	public int getTo() {
-		return to;
-	}
-
-	public void setTo(int to) {
-		this.to = to;
-	}
-
-	public Piece getPiece() {
-		return piece;
-	}
-
-	public void setPiece(Piece piece) {
-		this.piece = piece;
-	}
-
+	
 	public Move getMove() {
 		return move;
 	}

@@ -14,16 +14,16 @@ public class MaterialHeuristic {
 	//https://www.chessprogramming.org/Evaluation#Linear_vs._Nonlinear
 	
 	public int evaluateMiniMax(Board position, MoveGenerator movegen) {
-		Board board = Board.getBoardCloneNew(position);
+		Board board = Board.deepCopy(position);
 		List<Integer> side = movegen.getAll(Color.LIGHT, board);
 		List<Integer> oppositeSide = movegen.getAll(Color.DARK, board);
 		int valueSum = 0;
 		int oppositeValueSum = 0;
 		for (Integer piece : side) {
-			valueSum += materialValue.getValue(board.getBoardReference().get(piece));
+			valueSum += materialValue.getValue(board.getBoardMapReference().get(piece));
 		}
 		for (Integer piece : oppositeSide) {
-			oppositeValueSum += materialValue.getValue(board.getBoardReference().get(piece));
+			oppositeValueSum += materialValue.getValue(board.getBoardMapReference().get(piece));
 		}
 		return (valueSum-oppositeValueSum);
 	}
