@@ -2,7 +2,7 @@ package ai.movegen;
 
 import ai.representation.piece.Piece;
 
-public class Move implements Comparable<Move>{
+public class Move{
 
 	private int from;
 	
@@ -11,8 +11,6 @@ public class Move implements Comparable<Move>{
 	private Piece fromPiece;
 	
 	private Piece toPiece;
-	
-	private int moveRating;
 	
 	public Move(int from, int to, Piece fromPiece, Piece toPiece) {
 		super();
@@ -24,7 +22,7 @@ public class Move implements Comparable<Move>{
 
 	@Override
 	public String toString() {
-		return "Move [from=" + from + ", to=" + to + ", fromPiece=" + fromPiece + ", toPiece=" + toPiece + ", moveRating=" + moveRating +  "]";
+		return "Move [from=" + from + ", to=" + to + ", fromPiece=" + fromPiece + ", toPiece=" + toPiece  +  "]";
 	}
 
 	public int getFrom() {
@@ -57,19 +55,6 @@ public class Move implements Comparable<Move>{
 
 	public void setToPiece(Piece toPiece) {
 		this.toPiece = toPiece;
-	}
-
-	public int getMoveRating() {
-		return moveRating;
-	}
-
-	public void setMoveRating(int moveScoreRating) {
-		this.moveRating = moveScoreRating;
-	}
-
-	@Override
-	public int compareTo(Move o) {
-		return this.moveRating > o.moveRating ? 1 : this.moveRating < o.moveRating ? -1 : 0;
 	}
 
 }

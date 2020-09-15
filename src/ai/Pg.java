@@ -3,10 +3,10 @@ package ai;
 import ai.eval.ComplexMiniMaxEvaluateImpl;
 import ai.eval.Evaluate;
 import ai.eval.MaterialMiniMaxEvaluateImpl;
+import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
-import ai.representation.PVNode;
-import ai.representation.piece.EmptyPiece;
+import ai.representation.Node;
 import ai.representation.piece.Queen;
 import ai.representation.piece.Rook;
 import ai.search.MiniMaxSearch;
@@ -16,6 +16,7 @@ public class Pg {
 	
 	
 	public static void main(String[] args) {
+		
 		Board board =  new Board();
 		firstExample(board);
 		
@@ -48,19 +49,27 @@ public class Pg {
 		
 		
 		MiniMaxSearch miniMax = new MiniMaxSearch(board);
-		miniMax.setDepth(0);
-		PVNode pvTree = new PVNode();
-		pvTree.setDepth(0);
+		Node pvTree = new Node();
 		pvTree.setParent(null);
-		pvTree.setValue(board);
-		miniMax.setPvTree(pvTree);
-		int best = miniMax.maxi(1, evaluator, board, pvTree); //todo revisit this
+		pvTree.setPosition(board);
+		pvTree.setDepth(0);
+		MoveGenerator movegen = new MoveGenerator();
+		int best = miniMax.maxi(2, evaluator, board, pvTree, movegen); //todo revisit this
 		
 		System.out.println("----------");
-		System.out.println(miniMax.getPvTree().toString());
+		System.out.println(pvTree.toString());
 		
-		System.out.println("best move: " + miniMax.getPvTree().getBestMove());
-		System.out.println("best position :\n " + miniMax.getPvTree().getPrincipalVariationFinalPosition());
+		System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
+		System.out.println("best position :\n " + pvTree.getPvNodes().peekLast().getPosition());
+		
+		for (Node bm : pvTree.getPvNodes()) {
+			//System.out.println(bm.getMoveStringWithRating());
+			if(bm.getPosition().getTransitionMoveFromPreviousBoard().getFrom() == 7 && bm.getPosition().getTransitionMoveFromPreviousBoard().getTo() == 21) {
+				System.out.println("random subtree check...");
+				System.out.println(bm);
+			}
+			
+		}
 	}
 	
 	public static void secondExample(Board board) {
@@ -72,18 +81,17 @@ public class Pg {
 //		Board.place(new Queen(Color.LIGHT), 32, board);
 		Evaluate complexEval = new ComplexMiniMaxEvaluateImpl();
 		MiniMaxSearch miniMax = new MiniMaxSearch(board);
-		miniMax.setDepth(0);
-		PVNode pvTree = new PVNode();
+		Node pvTree = new Node();
 		pvTree.setDepth(0);
 		pvTree.setParent(null);
-		pvTree.setValue(board);
-		miniMax.setPvTree(pvTree);
-		int best = miniMax.mini(3, complexEval, board, pvTree);
+		pvTree.setPosition(board);
+		MoveGenerator movegen = new MoveGenerator();
+		int best = miniMax.mini(3, complexEval, board, pvTree, movegen);
 		System.out.println("----------");
-		System.out.println(miniMax.getPvTree().toString());
+		System.out.println(pvTree.toString());
 		
-		System.out.println("best move: " + miniMax.getPvTree().getBestMove());
-		System.out.println("best position :\n " + miniMax.getPvTree().getPrincipalVariationFinalPosition());
+		System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
+		System.out.println("best position :\n " + pvTree.getPvNodes().peekLast().getPosition());
 		
 	}
 	

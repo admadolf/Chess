@@ -3,18 +3,14 @@ package ai.search;
 import java.util.List;
 
 import ai.eval.Evaluate;
+import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
-import ai.representation.PVNode;
+import ai.representation.Node;
 
 public class MiniMaxSearch {
 
-	Integer depth = null;
-	
-	PVNode pvTree = null;
-	
-	MoveGenerator movegen = new MoveGenerator();
 	
 	public MiniMaxSearch(Board position) {
 		super();
@@ -23,17 +19,10 @@ public class MiniMaxSearch {
 	public MiniMaxSearch() {
 		
 	}
-	
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
 
-	public void setPvTree(PVNode pvTree) {
-		this.pvTree = pvTree;
-	}
-
-	public int maxi(int depthLimit,Evaluate evaluator, Board position,PVNode parent) {
-		if(depth == depthLimit) {
+	public int maxi(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen) {
+		int prevDepth = parent.getDepth();
+		if(prevDepth == depthLimit) {
 			System.out.println("a");
 			int result = evaluator.evaluateMiniMax(position);
 			return result;
@@ -45,34 +34,26 @@ public class MiniMaxSearch {
 		}
 		
 		MiniMaxSearch mini = new MiniMaxSearch();
-		int newDepth = depth+1;
-		mini.setDepth(newDepth);
+		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
-			PVNode child = new PVNode();
-			child.setDepth(mini.depth);
-			child.setParent(parent);
-			child.setValue(nextPosition);
-			child.setMiniOrMaxi("mini");
-			parent.addChild(child);
-			int score = mini.mini(depthLimit, evaluator, nextPosition, child);
-			child.setScore(score);
-			child.setMove(nextPosition.getMove());
-			//child.getMove().setMoveRating(score); //uj
-			if(score > max) {
+			Node node = Node.createNode(currDepth, parent, nextPosition, "mini");
+			int score = mini.mini(depthLimit, evaluator, nextPosition, node, movegen);
+			node.setScore(score);
+			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
+			if(score > max) { //TODO might set this to >= to rise the number
 				max = score;
-				child.setBestMove(nextPosition.getMove());
-				parent.setBestMove(nextPosition.getMove());
-				//parent.addMoveToSet(child.getMove()); //uj
+				//bubbling things up to root
+				parent.addToPvNodes(node);
 				parent.setScore(score);
-				//this adds the next position to the root node at the last step of the minimax
-				parent.setPrincipalVariationFinalPosition(nextPosition);
 			}
+			parent.addChild(node);
 		}
 		return max;
 	}
 	
-	public int mini(int depthLimit,Evaluate evaluator, Board position,PVNode parent) {
-		if(depth == depthLimit) {
+	public int mini(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen) {
+		int prevDepth = parent.getDepth();
+		if(prevDepth == depthLimit) {
 			int result = evaluator.evaluateMiniMax(position);
 			return result;
 		}
@@ -84,36 +65,21 @@ public class MiniMaxSearch {
 			return -1000002; //evaluator.evaluateMiniMax(position)
 		}
 		MiniMaxSearch maxi = new MiniMaxSearch();
-		int newDepth = depth+1;
-		maxi.setDepth(newDepth);
+		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
-			PVNode child = new PVNode();
-			child.setDepth(maxi.depth);
-			child.setParent(parent);
-			child.setValue(nextPosition);
-			child.setMiniOrMaxi("maxi");
-			parent.addChild(child);
-			int score = maxi.maxi(depthLimit, evaluator, nextPosition, child);
-			child.setScore(score);
-			
-			
-			
-			child.setMove(nextPosition.getMove());
-			//child.getMove().setMoveRating(score); //uj
-			if(score < min) {
+			Node node = Node.createNode(currDepth, parent, nextPosition, "maxi");
+			int score = maxi.maxi(depthLimit, evaluator, nextPosition, node, movegen);
+			node.setScore(score);
+			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
+			if(score < min) { //TODO might set this to >= to rise the number
 				min = score;
-				child.setBestMove(nextPosition.getMove());
-				parent.setBestMove(nextPosition.getMove());
+				//bubbling things up to root
+				parent.addToPvNodes(node);
 				parent.setScore(score);
-				//parent.addMoveToSet(child.getMove()); //uj
-				parent.setPrincipalVariationFinalPosition(nextPosition);
 			}
+			parent.addChild(node);
 		}
 		return min;
-	}
-
-	public PVNode getPvTree() {
-		return pvTree;
 	}
 
 }
