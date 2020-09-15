@@ -16,7 +16,7 @@ import ai.representation.piece.Rook;
 
 public class Board {
 
-	private Move move;
+	private Move transitionMoveFromPreviousBoard;
 	
 	private boolean whiteQueenSideCastle;
 	private boolean whiteKingSideCastle;
@@ -113,12 +113,10 @@ public class Board {
 		return board.board.get(square).getColor();
 	}
 	
-	@SuppressWarnings(value = { "This might change the board" })
 	public Piece grabPieceAndCleanFrom(int from) {
 		return this.board.put(from, new EmptyPiece());
 	}
 	
-	@SuppressWarnings(value = { "This might change the board" })
 	public void place(Piece piece , int to) {
 		this.board.put(to, piece);
 	}
@@ -127,12 +125,12 @@ public class Board {
 		return this.board.get(key);
 	}
 	
-	public Move getMove() {
-		return move;
+	public Move getTransitionMoveFromPreviousBoard() {
+		return transitionMoveFromPreviousBoard;
 	}
-
-	public void setMove(Move move) {
-		this.move = move;
+	
+	public void setTransitionMoveFromPreviousBoard(Move move) {
+		this.transitionMoveFromPreviousBoard = move;
 	}
 	
 }

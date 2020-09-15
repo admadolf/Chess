@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -28,14 +27,6 @@ import ai.representation.piece.Rook;
  * @author adam adolf
  * shaazamkazni b3ta m$xbol
  * //43:25,2:34
- */
-/**
- * @author Ádám
- *
- */
-/**
- * @author Ádám
- *
  */
 public class MoveGenerator {
 
@@ -225,7 +216,7 @@ public class MoveGenerator {
 				Board nextBoard = Board.deepCopy(board);
 				Piece piece = nextBoard.grabPieceAndCleanFrom(from);
 				nextBoard.place(piece, to);
-				nextBoard.setMove(new Move(from, to, piece, board.getBoardMapReference().get(to)));
+				nextBoard.setTransitionMoveFromPreviousBoard(new Move(from, to, piece, board.getBoardMapReference().get(to)));
 				positions.add(nextBoard);
 			}
 		}
@@ -237,7 +228,7 @@ public class MoveGenerator {
 			for (Integer to : generateMoves(from, board)) {
 				Board nextBoard = Board.deepCopy(board);
 				Piece piece = nextBoard.grabPieceAndCleanFrom(from);
-				nextBoard.setMove(new Move(from, to, piece, board.getBoardMapReference().get(to)));
+				nextBoard.setTransitionMoveFromPreviousBoard(new Move(from, to, piece, board.getBoardMapReference().get(to)));
 				nextBoard.place(piece, to);
 				positions.add(nextBoard);
 			}
@@ -294,6 +285,7 @@ public class MoveGenerator {
 	}
 	
 	public boolean IsKingInCheck(final Color color,final Board board) {
+		Optional
 		List<Integer> pieceList = getAll(color, board);
 		Integer kingSquare = -1;
 		for (Integer key : pieceList) {
@@ -319,7 +311,7 @@ public class MoveGenerator {
 	 * @param board
 	 * @return
 	 */
-	public boolean isAttackedBy(final Integer square,final Piece piece,final Board board) {
+	public boolean isAttackedBy(final Integer square, final Piece piece, final Board board) {
 		Board boardClone = Board.deepCopy(board);
 		boardClone.place(piece, square);
 		List<Integer> attackedList = generateMoves(square, boardClone);

@@ -4,12 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.piece.Bishop;
