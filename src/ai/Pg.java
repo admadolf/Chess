@@ -7,6 +7,8 @@ import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.Node;
+import ai.representation.piece.Knight;
+import ai.representation.piece.Pawn;
 import ai.representation.piece.Queen;
 import ai.representation.piece.Rook;
 import ai.search.MiniMaxSearch;
@@ -18,9 +20,15 @@ public class Pg {
 	public static void main(String[] args) {
 		
 		Board board =  new Board();
-		firstExample(board);
+		//firstExample(board);
+		//board.initBoard();
+		board.initEmptyBoard();
+		MoveGenerator mg = new MoveGenerator();
 		
-		
+		board.place(new Rook(Color.LIGHT), 10);
+		board.place(new Knight(Color.DARK), 27);
+		System.out.println(board.toString());
+		System.out.println(mg.isAttackedBy(10, new Knight(Color.DARK), board));
 	}
 	
 	public static void testBoardMethods() {

@@ -285,7 +285,6 @@ public class MoveGenerator {
 	}
 	
 	public boolean IsKingInCheck(final Color color,final Board board) {
-		Optional
 		List<Integer> pieceList = getAll(color, board);
 		Integer kingSquare = -1;
 		for (Integer key : pieceList) {
@@ -314,7 +313,7 @@ public class MoveGenerator {
 	public boolean isAttackedBy(final Integer square, final Piece piece, final Board board) {
 		Board boardClone = Board.deepCopy(board);
 		boardClone.place(piece, square);
-		List<Integer> attackedList = generateMoves(square, boardClone);
+		List<Integer> attackedList = generateMoves(square, boardClone); //TODO pawn moves should be adjusted here
 		for (Integer attacked : attackedList) {
 			Piece pieceOnAttackedSquare = boardClone.getBoardMapReference().get(attacked);
 			Color colorOfAttacked = pieceOnAttackedSquare.getColor();
@@ -324,6 +323,21 @@ public class MoveGenerator {
 		}
 		return false;
 	}
+	
+	/*	public List<Integer> getAttackers(final Integer square, final Piece piece, final Board board){
+			List<Integer> list = new ArrayList<Integer>();
+			Board boardClone = Board.deepCopy(board);
+			boardClone.place(piece, square);
+			List<Integer> attackedList = generateMoves(square, boardClone);
+			for (Integer attacked : attackedList) {
+				Piece pieceOnAttackedSquare = boardClone.getBoardMapReference().get(attacked);
+				Color colorOfAttacked = pieceOnAttackedSquare.getColor();
+				if(colorOfAttacked.opposite() == piece.getColor() && pieceOnAttackedSquare.getPieceType() == piece.getPieceType()) {
+					return true;
+				}
+			}
+			return false;
+		}*/
 	//helper methods
 	//
 	//

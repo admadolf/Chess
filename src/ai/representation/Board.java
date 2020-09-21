@@ -23,8 +23,8 @@ public class Board {
 	private boolean darkQueenSideCastle;
 	private boolean darkKingSideCastle;
 	
-	private static String rankHeader = "  A  B  C  D  E  F  G  H";
-	private static String rankHeaderDelim ="  -- -- -- -- -- -- -- --";
+	private static String rankHeader = "  A  B  C  D  E  F  G  H  ";
+	private static String rankHeaderDelim ="  -- -- -- -- -- -- -- --  ";
 	private static String fileHeaderDelim = "|";
 	
 	//ints from 0 to 63 representing board squares
@@ -98,6 +98,24 @@ public class Board {
 			builder.append(rowStart/8+1).append(fileHeaderDelim);
 			IntStream.range(rowStart, rowEnd).forEach((i) -> builder.append(board.get(i).toString()));
 			builder.append(fileHeaderDelim).append(rowStart/8+1);
+			builder.append(System.lineSeparator());
+		}
+		builder.append(rankHeaderDelim).append(System.lineSeparator());
+		builder.append(rankHeader).append(System.lineSeparator());
+		return builder.toString();
+	}
+	
+	public String toStringFlipped() {
+		StringBuilder builder = new StringBuilder("");
+		int rowStart = 56;
+		int rowEnd = 64; //end is exclusive
+		int rowOffset = rowStart-rowEnd;
+		builder.append(rankHeader).reverse().append(System.lineSeparator());
+		builder.append(rankHeaderDelim).append(System.lineSeparator());
+		for (; rowStart>=0; rowStart+=rowOffset,rowEnd+=rowOffset) {
+			builder.append(Math.abs((rowStart-64)/8)).append(fileHeaderDelim);
+			IntStream.range(rowStart, rowEnd).forEach((i) -> builder.append(board.get(Math.abs(i-63)).toString()));
+			builder.append(fileHeaderDelim).append(Math.abs((rowStart-64)/8));
 			builder.append(System.lineSeparator());
 		}
 		builder.append(rankHeaderDelim).append(System.lineSeparator());
