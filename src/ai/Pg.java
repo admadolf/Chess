@@ -7,6 +7,8 @@ import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.Node;
+import ai.representation.piece.King;
+import ai.representation.piece.Knight;
 import ai.representation.piece.Queen;
 import ai.representation.piece.Rook;
 import ai.search.MiniMaxSearch;
@@ -19,8 +21,16 @@ public class Pg {
 		
 		Board board =  new Board();
 		firstExample(board);
-		
-		
+		/*	board.initEmptyBoard();
+			MoveGenerator mg = new MoveGenerator();
+			
+			board.place(new King(Color.LIGHT), 10);
+			board.place(new Knight(Color.DARK), 27);
+			mg.generateMoves(10, board);
+			System.out.println(board.toString());
+			System.out.println(mg.isAttackedBy(10, new Knight(Color.DARK), board));
+			System.out.println(mg.IsKingInCheck(Color.LIGHT, board));
+			System.out.println(System.identityHashCode(board));*/
 	}
 	
 	public static void testBoardMethods() {
@@ -54,7 +64,7 @@ public class Pg {
 		pvTree.setPosition(board);
 		pvTree.setDepth(0);
 		MoveGenerator movegen = new MoveGenerator();
-		int best = miniMax.maxi(2, evaluator, board, pvTree, movegen); //todo revisit this
+		int best = miniMax.maxi(3, evaluator, board, pvTree, movegen); //todo revisit this
 		
 		System.out.println("----------");
 		System.out.println(pvTree.toString());
@@ -62,14 +72,14 @@ public class Pg {
 		System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
 		System.out.println("best position :\n " + pvTree.getPvNodes().peekLast().getPosition());
 		
-		for (Node bm : pvTree.getPvNodes()) {
-			//System.out.println(bm.getMoveStringWithRating());
-			if(bm.getPosition().getTransitionMoveFromPreviousBoard().getFrom() == 7 && bm.getPosition().getTransitionMoveFromPreviousBoard().getTo() == 21) {
-				System.out.println("random subtree check...");
-				System.out.println(bm);
+			for (Node bm : pvTree.getPvNodes()) {
+				//System.out.println(bm.getMoveStringWithRating());
+				//if(bm.getPosition().getTransitionMoveFromPreviousBoard().getFrom() == 7 && bm.getPosition().getTransitionMoveFromPreviousBoard().getTo() == 21) {
+					System.out.println("random subtree check...");
+					System.out.println(bm.getPosition().getTransitionMoveFromPreviousBoard());
+				//}
+				
 			}
-			
-		}
 	}
 	
 	public static void secondExample(Board board) {

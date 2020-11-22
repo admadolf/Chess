@@ -5,55 +5,94 @@ import java.util.Map;
 
 import ai.representation.Color;
 import ai.representation.PieceType;
-import ai.representation.piece.Piece;
+import ai.representation.piece.ColoredPiece;
 
 public class PieceSquareTable {
 
-	private Map<String,Map<Integer,Integer>> pieceSquareTable = new HashMap<>();
-
+	private Map<ColoredPiece,int[]> pieceSquareTable = new HashMap<>();
+	
 	public PieceSquareTable() {
 		super();
-		initPawnTable();
-		
-		
-		
-		Map<Integer,Integer> knightTable = new HashMap<>();
-		
-		Map<Integer,Integer> bishopTable = new HashMap<>();
-		
-		Map<Integer,Integer> queenTable = new HashMap<>();
+		initPawnTables();
+		initBishopTables();
+		initKnightTables();
 	}
 	
-	void initPawnTable() {
-		Map<Integer,Integer> whitePawnTable = new HashMap<>();
-		whitePawnTable.put(11, -30);
-		whitePawnTable.put(12, -30);
-		whitePawnTable.put(19, 3);
-		whitePawnTable.put(20, 3);
-		whitePawnTable.put(27, 6);
-		whitePawnTable.put(28, 6);
-		pieceSquareTable.put(Color.LIGHT+""+PieceType.PAWN, whitePawnTable);
-		Map<Integer,Integer> darkPawnTable = new HashMap<>();
-		darkPawnTable.put(51, -30);
-		darkPawnTable.put(52, -30);
-		darkPawnTable.put(43, 3);
-		darkPawnTable.put(44, 3);
-		darkPawnTable.put(35, 6);
-		darkPawnTable.put(36, 6);
-		pieceSquareTable.put(Color.DARK+""+PieceType.PAWN, darkPawnTable);
+	private void initPawnTables() {
+		int[] whitePawnTable = new int[64];
+		whitePawnTable[11] = -30;
+		whitePawnTable[12] = -30;
+		whitePawnTable[19] = 3;
+		whitePawnTable[20] = 3;
+		whitePawnTable[27] = 6;
+		whitePawnTable[28] = 6;
+		pieceSquareTable.put(new ColoredPiece(PieceType.PAWN, Color.LIGHT), whitePawnTable);
+		int[] darkPawnTable  = new int[64];
+		darkPawnTable[51] = -30;
+		darkPawnTable[52] = -30;
+		darkPawnTable[43] = 3;
+		darkPawnTable[44] = 3;
+		darkPawnTable[35] = 6;
+		darkPawnTable[36] = 6;
+		pieceSquareTable.put(new ColoredPiece(PieceType.PAWN, Color.DARK), darkPawnTable);
 	}
-
-	public Map<Integer, Integer> get(Piece piece) {
-		String key = piece.getColor()+""+piece.getPieceType();
-		Map<Integer,Integer> copy = new HashMap<>();
-		if(pieceSquareTable.get(key) != null) {
-			copy = new HashMap<>(pieceSquareTable.get(key));
+	
+	private void initKnightTables() {
+		int[] lightKnightTable = {
+				-16,-12,-8,-8,-8,-8,-12,-16,
+				-8,0,1,2,2,1,0,-8,
+				-8,0,4,6,6,4,0,-8,
+				-8,0,6,8,8,6,0,-8,
+				-8,0,6,8,8,6,0,-8,
+				-8,0,4,6,6,4,0,-8,
+				-8,0,0,0,0,0,0,-8,
+				-8,-8,-8,-8,-8,-8,-8,-8
+				};
+		pieceSquareTable.put(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), lightKnightTable);
+		int[] darkKnightTable = {
+				-8,-8,-8,-8,-8,-8,-8,-8,
+				-8,0,0,0,0,0,0,-8,
+				-8,0,4,6,6,4,0,-8,
+				-8,0,6,8,8,6,0,-8,
+				-8,0,6,8,8,6,0,-8,
+				-8,0,4,6,6,4,0,-8,
+				-8,0,1,2,2,1,0,-8,
+				-16,-12,-8,-8,-8,-8,-12,-16,
+				};
+		pieceSquareTable.put(new ColoredPiece(PieceType.KNIGHT, Color.DARK), darkKnightTable);
+	}
+	
+	private void initBishopTables() {
+		int[] lightBishopTable = {
+				-4,-4,-12,-4,-4,-12,-4,-4,
+				-4,2,1,1,1,1,2,-4,
+				-4,1,2,4,4,2,1,-4,
+				-4,0,4,6,6,4,0,-4,
+				-4,0,4,6,6,4,0,-4,
+				-4,0,2,4,4,2,0,-4,
+				-4,0,0,0,0,0,0,-4,
+				-4,-4,-4,-4,-4,-4,-4,-4
+		};
+		pieceSquareTable.put(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), lightBishopTable);
+		int[] darkBishopTable = {
+				-4,-4,-4,-4,-4,-4,-4,-4,
+				-4,0,0,0,0,0,0,-4,
+				-4,0,2,4,4,2,0,-4,
+				-4,0,4,6,6,4,0,-4,
+				-4,0,4,6,6,4,0,-4,
+				-4,1,2,4,4,2,1,-4,
+				-4,2,1,1,1,1,2,-4,
+				-4,-4,-12,-4,-4,-12,-4,-4
+		};
+		pieceSquareTable.put(new ColoredPiece(PieceType.BISHOP, Color.DARK), darkBishopTable);
+	}
+	
+	public Integer getPSTableValue(ColoredPiece piece,Integer coordinate) {
+		if(this.pieceSquareTable.containsKey(piece)) {
+			Integer value = this.pieceSquareTable.get(piece)[coordinate];
+			return value != null ? value : 0;
+		}else {
+			return 0;
 		}
-		return copy;
-	} 
-
-	public Integer getPSTableValue(Piece piece,Integer coordinate) {
-		Integer value = this.get(piece).get(coordinate);
-		return value != null ? value : 0;
 	}
 }

@@ -8,11 +8,10 @@ public class MaterialMiniMaxEvaluateImpl implements Evaluate{
 	MoveGenerator movegen = new MoveGenerator();
 	
 	MaterialHeuristic materialHeuristic = new MaterialHeuristic();
-	PieceSquareTable psTable = new PieceSquareTable();
 	
 	@Override
 	public int evaluateMiniMax(Board board) {
-		System.out.println("evaulating material");
+		//System.out.println("evaulating material");
 		return materialHeuristic.evaluateMiniMax(board,movegen);
 	}
 

@@ -15,7 +15,7 @@ public class Node implements Comparable<Node>{
 	
 	private Node parent = null;
 	
-	private List<Node> children = new ArrayList<Node>();
+	private LinkedList<Node> children = new LinkedList<Node>();
 	
 	private LinkedList<Node> pvNodes = new LinkedList<Node>();
 	
@@ -40,7 +40,10 @@ public class Node implements Comparable<Node>{
 		this.children.add(pvNode);
 	}
 	
-	
+	public LinkedList<Node> getChildren() {
+		return children;
+	}
+
 	public Board getPosition() {
 		return position;
 	}
@@ -123,4 +126,37 @@ public class Node implements Comparable<Node>{
 	public String getMoveStringWithRating() {
 		return position.getTransitionMoveFromPreviousBoard().toString() + ", moveRating = " +  score + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((depth == null) ? 0 : depth.hashCode());
+		result = prime * result + ((position == null) ? 0 : position.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (depth == null) {
+			if (other.depth != null)
+				return false;
+		} else if (!depth.equals(other.depth))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		return true;
+	}
+	
+	
 }

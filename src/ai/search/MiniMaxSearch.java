@@ -23,7 +23,6 @@ public class MiniMaxSearch {
 	public int maxi(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen) {
 		int prevDepth = parent.getDepth();
 		if(prevDepth == depthLimit) {
-			System.out.println("a");
 			int result = evaluator.evaluateMiniMax(position);
 			return result;
 		}
@@ -37,6 +36,9 @@ public class MiniMaxSearch {
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
 			Node node = Node.createNode(currDepth, parent, nextPosition, "mini");
+			if(movegen.IsKingInCheck(Color.LIGHT, nextPosition)) {
+				continue;
+			}
 			int score = mini.mini(depthLimit, evaluator, nextPosition, node, movegen);
 			node.setScore(score);
 			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
@@ -68,6 +70,9 @@ public class MiniMaxSearch {
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
 			Node node = Node.createNode(currDepth, parent, nextPosition, "maxi");
+			if(movegen.IsKingInCheck(Color.DARK, nextPosition)) {
+				continue;
+			}
 			int score = maxi.maxi(depthLimit, evaluator, nextPosition, node, movegen);
 			node.setScore(score);
 			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
