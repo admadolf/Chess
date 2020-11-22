@@ -1,17 +1,17 @@
 package ai.eval;
 
-import ai.representation.piece.Piece;
+import ai.representation.piece.ColoredPiece;
 
 public class MaterialValue {
 
-	private final int pawnVal = 100;
-	private final int rookVal = 500;
-	private final int knightVal = 350;
-	private final int bishopVal = 350;
-	private final int queenVal = 1000;
-	private final int kingVal = 100000;
+	private static final int pawnVal = 100;
+	private static final int rookVal = 500;
+	private static final int knightVal = 350;
+	private static final int bishopVal = 350;
+	private static final int queenVal = 1000;
+	private static final int kingVal = 100000;
 	
-	int getValue(Piece piece) {
+	public static int getValue(ColoredPiece piece) {
 		switch (piece.getPieceType()) {
 			case PAWN:
 				return pawnVal;
