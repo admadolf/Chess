@@ -1,2 +1,2 @@
 # Chess
-Java FX chess game with AI using alpha-beta pruning
+Java FX chess game with AI using minimax based search
