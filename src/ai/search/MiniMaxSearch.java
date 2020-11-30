@@ -8,6 +8,7 @@ import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.Node;
+import game.Game;
 
 public class MiniMaxSearch {
 
@@ -20,14 +21,14 @@ public class MiniMaxSearch {
 		
 	}
 
-	public int maxi(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen) {
+	public int maxi(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen, Game game) {
 		int prevDepth = parent.getDepth();
 		if(prevDepth == depthLimit) {
 			int result = evaluator.evaluateMiniMax(position);
 			return result;
 		}
 		int max = -100001;
-		List<Board> positions = movegen.generatePositions(position,Color.LIGHT);
+		List<Board> positions = movegen.generatePositions(position,Color.LIGHT, game);
 		if (positions.isEmpty()) {
 			return 1000002;
 		}
@@ -36,10 +37,11 @@ public class MiniMaxSearch {
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
 			Node node = Node.createNode(currDepth, parent, nextPosition, "mini");
-			if(movegen.IsKingInCheck(Color.LIGHT, nextPosition)) {
+			boolean isKingInCheck = movegen.isKingInCheck(Color.LIGHT, nextPosition, game);
+			if(isKingInCheck) {
 				continue;
 			}
-			int score = mini.mini(depthLimit, evaluator, nextPosition, node, movegen);
+			int score = mini.mini(depthLimit, evaluator, nextPosition, node, movegen, game);
 			node.setScore(score);
 			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
 			if(score > max) { //TODO might set this to >= to rise the number
@@ -53,7 +55,7 @@ public class MiniMaxSearch {
 		return max;
 	}
 	
-	public int mini(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen) {
+	public int mini(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen, Game game) {
 		int prevDepth = parent.getDepth();
 		if(prevDepth == depthLimit) {
 			int result = evaluator.evaluateMiniMax(position);
@@ -62,7 +64,7 @@ public class MiniMaxSearch {
 		
 		
 		int min = 100002;
-		List<Board> positions = movegen.generatePositions(position,Color.DARK);
+		List<Board> positions = movegen.generatePositions(position,Color.DARK, game);
 		if (positions.isEmpty()) {
 			return -1000002; //evaluator.evaluateMiniMax(position)
 		}
@@ -70,10 +72,11 @@ public class MiniMaxSearch {
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
 			Node node = Node.createNode(currDepth, parent, nextPosition, "maxi");
-			if(movegen.IsKingInCheck(Color.DARK, nextPosition)) {
+			boolean isKingInCheck = movegen.isKingInCheck(Color.DARK, nextPosition, game);
+			if(isKingInCheck) {
 				continue;
 			}
-			int score = maxi.maxi(depthLimit, evaluator, nextPosition, node, movegen);
+			int score = maxi.maxi(depthLimit, evaluator, nextPosition, node, movegen, game);
 			node.setScore(score);
 			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
 			if(score < min) { //TODO might set this to >= to rise the number
