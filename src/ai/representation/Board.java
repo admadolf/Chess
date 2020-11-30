@@ -5,14 +5,8 @@ import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 import ai.movegen.Move;
-import ai.representation.piece.Bishop;
-import ai.representation.piece.EmptyPiece;
-import ai.representation.piece.King;
-import ai.representation.piece.Knight;
-import ai.representation.piece.Pawn;
 import ai.representation.piece.ColoredPiece;
-import ai.representation.piece.Queen;
-import ai.representation.piece.Rook;
+import ai.representation.piece.EmptyPiece;
 
 public class Board {
 
@@ -45,7 +39,7 @@ public class Board {
 		super();
 		this.board = new TreeMap<>(boardMap);
 	}
-	
+
 	public void initBoard() {
 		board.put(56, new ColoredPiece(PieceType.ROOK,Color.DARK));
 		board.put(57, new ColoredPiece(PieceType.KNIGHT,Color.DARK));
@@ -157,17 +151,55 @@ public class Board {
 		this.transitionMoveFromPreviousBoard = move;
 	}
 
-	public static Board transposePosition(Board board, int from, int to) {
+	/**
+	 * deepCopy board argument and then transpose positions
+	 * @param board
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public static Board transposePositionToNewBoardInstance(Board board,final Move move) {
 		Board nextBoard = Board.deepCopy(board);
-		ColoredPiece tmpToPiece = board.getBoardMapReference().get(to);
-		ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(from);
-		nextBoard.place(piece, to);
-		nextBoard.setTransitionMoveFromPreviousBoard(
-				new Move(from, to, piece, tmpToPiece));
+		boolean castlingMove = move.getMoveType() == MoveType.CASTLELONG || move.getMoveType() == MoveType.CASTLESHORT;
+		if(castlingMove) {
+			if(move.getMoveType() == MoveType.CASTLESHORT) {
+				ColoredPiece king = nextBoard.grabPieceAndCleanFrom(move.getCastleKingFrom());
+				nextBoard.place(king, move.getCastleKingTo());
+				ColoredPiece rook = nextBoard.grabPieceAndCleanFrom(move.getCastleRookFrom());
+				nextBoard.place(rook, move.getCastleRookTo());
+			} else if(move.getMoveType() == MoveType.CASTLELONG) {
+				ColoredPiece king = nextBoard.grabPieceAndCleanFrom(move.getCastleKingFrom());
+				nextBoard.place(king, move.getCastleKingTo());
+				ColoredPiece rook = nextBoard.grabPieceAndCleanFrom(move.getCastleRookFrom());
+				nextBoard.place(rook, move.getCastleRookTo());
+			}
+		} else if(move.getMoveType() == MoveType.ENPASSANT){
+			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());
+			nextBoard.place(piece, move.getTo());
+			System.out.println(move.getEnPassantToBeCaptured());
+			nextBoard.grabPieceAndCleanFrom(move.getEnPassantToBeCaptured());
+		} else {
+			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());
+			nextBoard.place(piece, move.getTo());
+		}
+		//if move was used without defining from and to piece, set them
+		if(move.getFromPiece() == null || move.getToPiece() == null ) {
+			move.setFromPiece(board.get(move.getFrom()));;
+			move.setToPiece(board.get(move.getTo()));
+		}
+		//append the move to its board
+		nextBoard.setTransitionMoveFromPreviousBoard(move);
 		return nextBoard;
 	}
 	
-	public static Board transposePositionNab(Board board, int from, int to) {
+	/**
+	 * Transpose position on argument board !this overrides the argument board
+	 * @param board
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public static Board transposePosition(Board board, int from, int to) {
 		ColoredPiece tmpToPiece = board.getBoardMapReference().get(to);
 		ColoredPiece piece = board.grabPieceAndCleanFrom(from);
 		board.place(piece, to);
@@ -207,6 +239,5 @@ public class Board {
 			return false;
 		return true;
 	}
-	
-	
+
 }

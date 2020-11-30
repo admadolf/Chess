@@ -1,5 +1,5 @@
 package ai.representation;
 
 public enum MoveType {
-ATTACK,DEFENSE;
+ATTACK,DEFENSE,CASTLESHORT,CASTLELONG,ENPASSANTFLAG,ENPASSANT;
 }

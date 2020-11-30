@@ -7,8 +7,8 @@ import ai.eval.ComplexMiniMaxEvaluateImpl;
 import ai.eval.Evaluate;
 import ai.movegen.MoveGenerator;
 import ai.representation.Board;
-import ai.representation.Castle;
 import ai.representation.Color;
+import ai.representation.MoveType;
 import ai.representation.Node;
 import ai.representation.PieceType;
 import ai.representation.piece.ColoredPiece;
@@ -22,12 +22,13 @@ import ai.search.MiniMaxSearch;
  */
 public class Game {
 
-	boolean onTurn;
+	private int index = 0;
 	
-	public boolean hasLightCastledYet;
-	public boolean hasDarkCastledYet;
+	private boolean onTurn;
 	
-	private Integer enPassantSquare = null;
+	private boolean hasLightCastledYet;
+	
+	private boolean hasDarkCastledYet;
 	
 	private Board[] state = new Board[400];
 
@@ -59,6 +60,14 @@ public class Game {
 		 return state[i];
 	}
 	
+	public int getLatestBoardIndex() {
+		int i=0;
+		while(state[i+1] != null) {
+			++i;
+		}
+		 return i;
+	}
+	
 	/*	public Game(MoveGenerator generator, Board board, Evaluate evaluator, MiniMaxSearch search) {
 			super();
 			this.generator = generator;
@@ -73,7 +82,7 @@ public class Game {
 		pvTree.setPosition(board);
 		pvTree.setDepth(0);
 		
-		search.maxi(lookAheadDepth, this.lightEvaluator, board, pvTree, this.generator);
+		search.maxi(lookAheadDepth, this.lightEvaluator, board, pvTree, this.generator, this);
 		//System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
 		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
 	}
@@ -84,7 +93,7 @@ public class Game {
 		pvTree.setPosition(board);
 		pvTree.setDepth(0);
 		
-		search.mini(lookAheadDepth, this.darkEvaluator, board, pvTree, this.generator);
+		search.mini(lookAheadDepth, this.darkEvaluator, board, pvTree, this.generator, this);
 		//System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
 		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
 	}
@@ -113,10 +122,17 @@ public class Game {
 		this.darkEvaluator = darkEvaluator;
 	}
 	
-	public boolean calculateCanCastle(Color color, Castle castle) {
+	public int enPassantSquare(Color color) {
+		int enPassantSquare = -1;
+		int latestIndex = getLatestBoardIndex();
+		
+		return enPassantSquare;
+	}
+	
+	public boolean calculateCanCastle(Color color, MoveType moveType) {
 		boolean result = true;
 		boolean lightSide = color == Color.LIGHT;
-		if(castleBlocked(color, castle)) {
+		if(castleBlocked(color, moveType)) {
 			return false;
 		}
 		boolean hasCastledYet = lightSide ? hasLightCastledYet : hasDarkCastledYet;
@@ -125,9 +141,9 @@ public class Game {
 		
 		int initialRookSq = -1;
 		if(lightSide) {
-			initialRookSq = castle == Castle.SHORT ? 7 : 0; 
+			initialRookSq = moveType == MoveType.CASTLESHORT ? 7 : 0; 
 		} else {
-			initialRookSq = castle == Castle.SHORT ? 63 : 56;
+			initialRookSq = moveType == MoveType.CASTLESHORT ? 63 : 56;
 		}
 		if(!hasCastledYet) {
 			while (state[i] != null) {
@@ -147,38 +163,42 @@ public class Game {
 		return result;
 	}
 	
-	private boolean castleBlocked(Color color, Castle castle) {
+	private boolean castleBlocked(Color color, MoveType moveType) {
 		boolean isCastlingBlocked = false;
 		Board latestBoard = getLatestBoard(); //maybe move this 
 		//to argument and move this to king or some better place? cuz this has nothing to do with
 		//the game itself?
 		switch (color) {
 		case LIGHT:
-			switch(castle) {
-			case LONG:
+			switch(moveType) {
+			case CASTLELONG:
 				if(!Board.batchIsEmptySquare(latestBoard, 1,2,3)) {
 					isCastlingBlocked = true;
 				}
 				break;
-			case SHORT:
+			case CASTLESHORT:
 				if(!Board.batchIsEmptySquare(latestBoard, 5,6)) {
 					isCastlingBlocked = true;
 				}
 				break;
+			default:
+				throw new RuntimeException("Only CASTLESHORT and CASTLELONG moveType is supported when calling castling methods");
 			}
 			break;
 		case DARK:
-			switch(castle) {
-			case LONG:
+			switch(moveType) {
+			case CASTLELONG:
 				if(!Board.batchIsEmptySquare(latestBoard, 57,58,59)) {
 					isCastlingBlocked = true;
 				}
 				break;
-			case SHORT:
+			case CASTLESHORT:
 				if(!Board.batchIsEmptySquare(latestBoard, 61,62)) {
 					isCastlingBlocked = true;
 				}
 				break;
+			default:
+				throw new RuntimeException("Only CASTLESHORT and CASTLELONG moveType is supported when calling castling methods");
 			}
 			break;
 		default:
@@ -191,7 +211,14 @@ public class Game {
 	public String toString() {
 		return  Arrays.toString(getState());
 	}
-	
-	
+
+	public void addPositionToGame(Board board) {
+		state[index++] = board;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
 	
 }
