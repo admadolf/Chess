@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import ai.eval.ComplexMiniMaxEvaluateImpl;
 import ai.eval.Evaluate;
+import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
@@ -147,12 +148,13 @@ public class Game {
 		}
 		if(!hasCastledYet) {
 			while (state[i] != null) {
-				boolean hasKingMoved = state[i].getTransitionMoveFromPreviousBoard().getFrom() == initialKingSq
-						&& new ColoredPiece(PieceType.KING, color).equals(state[i].getTransitionMoveFromPreviousBoard().getFromPiece());
+				Move historicalMove = state[i].getTransitionMoveFromPreviousBoard();
+				//if king and rook castled this flag could still return false (they didnt move, because it only takes non castling moves into account) fixed?
+				boolean hasKingMoved = historicalMove.getFrom() == initialKingSq
+						&& new ColoredPiece(PieceType.KING, color).equals(historicalMove.getFromPiece()) && (historicalMove.getMoveType() != MoveType.CASTLESHORT || historicalMove.getMoveType() != MoveType.CASTLELONG);
 				
-				boolean hasRookMoved = state[i].getTransitionMoveFromPreviousBoard().getFrom() == initialRookSq
-						&& new ColoredPiece(PieceType.ROOK, color).equals(state[i].getTransitionMoveFromPreviousBoard().getFromPiece());
-				
+				boolean hasRookMoved = historicalMove.getFrom() == initialRookSq
+						&& new ColoredPiece(PieceType.ROOK, color).equals(historicalMove.getFromPiece());
 				if(hasKingMoved || hasRookMoved) {
 					result = false;
 					break;
@@ -213,7 +215,15 @@ public class Game {
 	}
 
 	public void addPositionToGame(Board board) {
+		Move move = board.getTransitionMoveFromPreviousBoard();
 		state[index++] = board;
+		if(move.getMoveType() == MoveType.CASTLESHORT || move.getMoveType() == MoveType.CASTLELONG) {
+			if(index % 2 == 0) {
+				hasDarkCastledYet = true;
+			} else {
+				hasLightCastledYet = true;
+			}
+		}
 	}
 
 	public int getIndex() {

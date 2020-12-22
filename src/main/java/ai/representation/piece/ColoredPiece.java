@@ -19,6 +19,56 @@ public class ColoredPiece {
 		return color.toString()+pieceType.toString()+" ";
 	}
 	
+	public String toUnicodeChessSymbol() {
+		switch(color) {
+			case DARK:
+				switch(pieceType) {
+				case BISHOP:
+					return "♝";
+				case EMPTY:
+					return "";
+				case KING:
+					return "♚";
+				case KNIGHT:
+					return "♞";
+				case PAWN:
+					return "♟";
+				case QUEEN:
+					return "♛";
+				case ROOK:
+					return "♜";
+				default:
+					break;
+				
+				}
+			break;
+			case LIGHT:
+				switch(pieceType) {
+				case BISHOP:
+					return "♗";
+				case EMPTY:
+					return "";
+				case KING:
+					return "♔";
+				case KNIGHT:
+					return "♘";
+				case PAWN:
+					return "♙";
+				case QUEEN:
+					return "♕";
+				case ROOK:
+					return "♖";
+				default:
+					break;
+				
+				}
+			break;
+			default:
+				return "";
+		}
+		return color.toString()+pieceType.toString()+" ";
+	}
+	
 	public Color getColor() {
 		return color;
 	}
