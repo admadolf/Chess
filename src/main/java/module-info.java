@@ -8,5 +8,11 @@ module chess {
 	exports game;
 	requires javafx.graphics;
 	requires javafx.fxml;
+	
+    requires javafx.controls;
+    requires javafx.media;
+    opens ui to javafx.fxml;
+    exports ui;
+
 
 }

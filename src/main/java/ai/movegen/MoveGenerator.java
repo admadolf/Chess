@@ -591,11 +591,11 @@ public class MoveGenerator {
 		return !(0 <= key && key <= 63);
 	}
 
-	private int row(int position) {
+	public int row(int position) {
 		return position / 8;
 	}
 
-	private int column(int position) {
+	public int column(int position) {
 		return position % 8;
 	}
 

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import java.net.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.PrimaryController">
+   <children>
+      <GridPane fx:id="chessBoard" gridLinesVisible="true" layoutX="15.0" layoutY="27.0" prefHeight="364.0" prefWidth="364.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button id="56" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick"/>
+            <Button id="57" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick"  GridPane.columnIndex="1" />
+            <Button id="58" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="2" />
+            <Button id="59" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="3" />
+            <Button id="60" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="4" />
+            <Button id="61" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="5" />
+            <Button id="62" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="6" />
+            <Button id="63" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="7" />
+            <Button id="48" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.rowIndex="1" />
+            <Button id="49" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button id="50" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button id="51" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button id="52" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Button id="53" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <Button id="54" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+            <Button id="55" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+            <Button id="40" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.rowIndex="2" />
+            <Button id="41" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button id="42" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Button id="43" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button id="44" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Button id="45" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+            <Button id="46" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+            <Button id="47" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+            <Button id="32" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.rowIndex="3" />
+            <Button id="33" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button id="34" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Button id="35" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Button id="36" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <Button id="37" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <Button id="38" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+            <Button id="39" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+            <Button id="24" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.rowIndex="4" />
+            <Button id="25" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button id="26" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Button id="27" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <Button id="28" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <Button id="29" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            <Button id="30" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+            <Button id="31" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+            <Button id="16" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.rowIndex="5" />
+            <Button id="17" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button id="18" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button id="19" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+            <Button id="20" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+            <Button id="21" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+            <Button id="22" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+            <Button id="23" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+            <Button id="8" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.rowIndex="6" />
+            <Button id="9" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button id="10" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Button id="11" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+            <Button id="12" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+            <Button id="13" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+            <Button id="14" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+            <Button id="15" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="6" />
+            <Button id="0" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.rowIndex="7" />
+            <Button id="1" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Button id="2" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Button id="3" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+            <Button id="4" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+            <Button id="5" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="5" GridPane.rowIndex="7" />
+            <Button id="6" prefHeight="200.0" prefWidth="200.0" styleClass="tile-dark" onAction="#onClick" GridPane.columnIndex="6" GridPane.rowIndex="7" />
+            <Button id="7" prefHeight="200.0" prefWidth="200.0" styleClass="tile-light" onAction="#onClick" GridPane.columnIndex="7" GridPane.rowIndex="7" />
+         </children>
+      </GridPane>
+      <MenuBar layoutY="2.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+            <MenuItem mnemonicParsing="false" onAction="#newGame" text="New Game" />
+              <MenuItem mnemonicParsing="false" onAction="#switchToSecondary" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+   <stylesheets>
+    <URL value="@../styles/Styles.css" />
+</stylesheets>
+</AnchorPane>
