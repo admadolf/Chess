@@ -20,10 +20,10 @@ public class MaterialHeuristic {
 		int valueSum = 0;
 		int oppositeValueSum = 0;
 		for (Integer piece : side) {
-			valueSum += materialValue.getValue(board.getBoardMapReference().get(piece));
+			valueSum += MaterialValue.getValue(board.getBoardMapReference().get(piece));
 		}
 		for (Integer piece : oppositeSide) {
-			oppositeValueSum += materialValue.getValue(board.getBoardMapReference().get(piece));
+			oppositeValueSum += MaterialValue.getValue(board.getBoardMapReference().get(piece));
 		}
 		return (valueSum-oppositeValueSum);
 	}

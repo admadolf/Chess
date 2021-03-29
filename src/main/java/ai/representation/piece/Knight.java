@@ -12,6 +12,6 @@ public class Knight extends ColoredPiece {
 	}
 
 	public static List<Integer> getMoveVectors() {
-		return PieceType.KNIGHT.moveVectors;
+		return PieceType.KNIGHT.getMoveVectors();
 	}
 }

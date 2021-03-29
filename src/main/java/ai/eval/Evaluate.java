@@ -4,6 +4,6 @@ import ai.representation.Board;
 
 public interface Evaluate {
 
-	int evaluateMiniMax(Board board);
+	int evaluate(Board board);
 	
 }

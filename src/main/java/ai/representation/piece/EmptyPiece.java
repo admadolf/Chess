@@ -8,9 +8,5 @@ public class EmptyPiece extends ColoredPiece {
 	public EmptyPiece() {
 		super(PieceType.EMPTY, Color.EMPTY);
 	}
-	
-	public EmptyPiece(PieceType pieceType, Color color) {
-		super(pieceType, color);
-	}
 
 }

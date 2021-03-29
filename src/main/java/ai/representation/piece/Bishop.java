@@ -12,7 +12,7 @@ public class Bishop extends ColoredPiece {
 	}
 
 	public static List<Integer> getMoveVectors() {
-		return PieceType.BISHOP.moveVectors;
+		return PieceType.BISHOP.getMoveVectors();
 	}
 	
 }

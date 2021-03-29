@@ -39,9 +39,9 @@ public enum PieceType {
 			})),
 	EMPTY("E", Arrays.asList(new Integer[] {}));
 
-	public final String text;
+	private final String text;
 
-	public List<Integer> moveVectors = new ArrayList<>();
+	private List<Integer> moveVectors = new ArrayList<>();
 	
 	public String toString() {
 		return text;

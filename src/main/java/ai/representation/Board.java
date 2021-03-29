@@ -1,5 +1,6 @@
 package ai.representation;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
@@ -28,11 +29,10 @@ public class Board {
     //        -9    -8    -7
 //     soWe         sout         soEa
 	
-	private Map<Integer,ColoredPiece> board = new TreeMap<>();
+	private Map<Integer,ColoredPiece> board = new HashMap<>();
 
 	public Board() {
 		super();
-		System.err.println("no arg board constr");
 	}
 	
 	public Board(Map<Integer,ColoredPiece> boardMap) {
@@ -40,6 +40,12 @@ public class Board {
 		this.board = new TreeMap<>(boardMap);
 	}
 
+	public static Board getASetuppedBoard() {
+		Board board = new Board();
+		board.initBoard();
+		return board;
+	}
+	
 	public void initBoard() {
 		board.put(56, new ColoredPiece(PieceType.ROOK,Color.DARK));
 		board.put(57, new ColoredPiece(PieceType.KNIGHT,Color.DARK));
@@ -178,34 +184,22 @@ public class Board {
 			nextBoard.place(piece, move.getTo());
 			System.out.println(move.getEnPassantToBeCaptured());
 			nextBoard.grabPieceAndCleanFrom(move.getEnPassantToBeCaptured());
+		} else if (move.getMoveType() == MoveType.PROMOTION) {
+			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());
+			ColoredPiece promoted = new ColoredPiece(PieceType.QUEEN, piece.getColor());
+			nextBoard.place(promoted, move.getTo());
 		} else {
 			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());
 			nextBoard.place(piece, move.getTo());
 		}
 		//if move was used without defining from and to piece, set them
 		if(move.getFromPiece() == null || move.getToPiece() == null ) {
-			move.setFromPiece(board.get(move.getFrom()));;
+			move.setFromPiece(board.get(move.getFrom()));
 			move.setToPiece(board.get(move.getTo()));
 		}
 		//append the move to its board
 		nextBoard.setTransitionMoveFromPreviousBoard(move);
 		return nextBoard;
-	}
-	
-	/**
-	 * Transpose position on argument board !this overrides the argument board
-	 * @param board
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	public static Board transposePosition(Board board, int from, int to) {
-		ColoredPiece tmpToPiece = board.getBoardMapReference().get(to);
-		ColoredPiece piece = board.grabPieceAndCleanFrom(from);
-		board.place(piece, to);
-		board.setTransitionMoveFromPreviousBoard(
-				new Move(from, to, piece, tmpToPiece));
-		return board;
 	}
 	
 	@Override

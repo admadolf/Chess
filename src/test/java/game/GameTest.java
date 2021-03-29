@@ -85,7 +85,7 @@ public class GameTest {
 			Board board = game.getState()[i-1];
 			if(i%2 == 1) {
 				System.out.println("LIGHT MOVE");
-				LinkedList<Node> moveList = game.moveLight(3, board);
+				LinkedList<Node> moveList = game.moveLight(2, board);
 				//Collections.shuffle(moveList);
 				game.getState()[i] = moveList.peekLast().getPosition();
 				System.out.println("NEXT BOARD");
@@ -97,7 +97,7 @@ public class GameTest {
 				if(i==12) {
 					System.out.println(i);
 				}
-				LinkedList<Node> moveList = game.moveDark(3, board);
+				LinkedList<Node> moveList = game.moveDark(2, board);
 				//Collections.shuffle(moveList);
 				//System.out.println("moveList: " + moveList);
 				//100000 a king erteke  + az allas erteke sumja mar nagyobb es a minimaxsearchben levo min value , csinalni vmit ezzel

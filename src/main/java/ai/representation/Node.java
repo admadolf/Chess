@@ -1,8 +1,6 @@
 package ai.representation;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 
 public class Node implements Comparable<Node>{

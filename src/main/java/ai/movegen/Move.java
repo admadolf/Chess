@@ -38,20 +38,16 @@ public class Move{
 	}
 	
 	public Move(MoveType moveType, int from, int to) {
-		super();
+		this(from, to);
 		this.moveType = moveType;
-		this.from = from;
-		this.to = to;
 	}
 	
 	public Move(int from, int to, ColoredPiece fromPiece, ColoredPiece toPiece) {
-		super();
-		this.from = from;
-		this.to = to;
+		this(from, to);
 		this.fromPiece = fromPiece;
 		this.toPiece = toPiece;
 	}
-
+	
 	public Move(MoveType castleType, int castleKingFrom, int castleRookFrom, int castleKingTo, int castleRookTo) {
 		super();
 		this.moveType = castleType;
@@ -61,8 +57,6 @@ public class Move{
 		this.castleRookTo = castleRookTo;
 	}
 
-
-
 	@Override
 	public String toString() {
 		if(moveType != null) {
@@ -71,6 +65,8 @@ public class Move{
 			} else if(moveType == MoveType.ENPASSANTFLAG) {
 				return "Move [MoveType: " + moveType  +" enPassantCandidate1=" + enPassantCapturer1 + ", enPassantCandidate2=" + enPassantCapturer2 + ", enPassantArrivalSquareAfterTake=" + enPassantArrivalSquareAfterTake +  "]";
 			} else if(moveType == MoveType.ENPASSANT) {
+				return "Move [MoveType: " + moveType  + " from=" + from + ", to=" + to + ", fromPiece=" + fromPiece + ", toPiece=" + toPiece  +  "]";
+			} else if(moveType == MoveType.PROMOTION) {
 				return "Move [MoveType: " + moveType  + " from=" + from + ", to=" + to + ", fromPiece=" + fromPiece + ", toPiece=" + toPiece  +  "]";
 			} else {
 				return "unknown moveType in Move toString()";
