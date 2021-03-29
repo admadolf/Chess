@@ -24,7 +24,7 @@ public class MiniMaxSearch {
 	public int maxi(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen, Game game) {
 		int prevDepth = parent.getDepth();
 		if(prevDepth == depthLimit) {
-			int result = evaluator.evaluateMiniMax(position);
+			int result = evaluator.evaluate(position);
 			return result;
 		}
 		int max = -100001;
@@ -58,7 +58,7 @@ public class MiniMaxSearch {
 	public int mini(int depthLimit,Evaluate evaluator, Board position,Node parent, MoveGenerator movegen, Game game) {
 		int prevDepth = parent.getDepth();
 		if(prevDepth == depthLimit) {
-			int result = evaluator.evaluateMiniMax(position);
+			int result = evaluator.evaluate(position);
 			return result;
 		}
 		

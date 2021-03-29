@@ -3,7 +3,7 @@ package game;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import ai.eval.ComplexMiniMaxEvaluateImpl;
+import ai.eval.MiniMaxEvaluateImpl;
 import ai.eval.Evaluate;
 import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
@@ -16,7 +16,7 @@ import ai.representation.piece.ColoredPiece;
 import ai.search.MiniMaxSearch;
 
 /**
- *  instantiate a game of chess, encapsulating ai setup,save information about game - castle rule, en passant, history of the PVNodes / board states / move states / check for mate etc.
+ *  instantiate a game of chess, encapsulating ai setup,save information about game - castle rule, en passant, history of the PVNodes / board states / move states /  etc.
  *  this class should know the whole state space of the game, should take care of both human and ai players
  * @author konek
  *
@@ -24,8 +24,6 @@ import ai.search.MiniMaxSearch;
 public class Game {
 
 	private int index = 0;
-	
-	private boolean onTurn;
 	
 	private boolean hasLightCastledYet;
 	
@@ -35,18 +33,16 @@ public class Game {
 
 	private MoveGenerator generator = new MoveGenerator();
 	
-	private Board board = new Board();
+	private Evaluate lightEvaluator = new MiniMaxEvaluateImpl();
 	
-	Evaluate lightEvaluator = new ComplexMiniMaxEvaluateImpl();
+	private MiniMaxSearch search = new MiniMaxSearch();
 	
-	MiniMaxSearch search = new MiniMaxSearch();
-	
-	Evaluate darkEvaluator = new ComplexMiniMaxEvaluateImpl();
+	private Evaluate darkEvaluator = new MiniMaxEvaluateImpl();
 	
 	public Game() {
 		super();
-		board.initBoard();
-		state[0] = board;
+		Board.getASetuppedBoard();
+		state[0] = Board.getASetuppedBoard();
 	}
 
 	public Board[] getState() {
@@ -61,22 +57,6 @@ public class Game {
 		 return state[i];
 	}
 	
-	public int getLatestBoardIndex() {
-		int i=0;
-		while(state[i+1] != null) {
-			++i;
-		}
-		 return i;
-	}
-	
-	/*	public Game(MoveGenerator generator, Board board, Evaluate evaluator, MiniMaxSearch search) {
-			super();
-			this.generator = generator;
-			this.board = board;
-			this.evaluator = evaluator;
-			this.search = search;
-		}*/
-
 	public LinkedList<Node> moveLight(int lookAheadDepth, Board board) {
 		Node pvTree = new Node();
 		pvTree.setParent(null);
@@ -84,7 +64,6 @@ public class Game {
 		pvTree.setDepth(0);
 		
 		search.maxi(lookAheadDepth, this.lightEvaluator, board, pvTree, this.generator, this);
-		//System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
 		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
 	}
 	
@@ -95,16 +74,11 @@ public class Game {
 		pvTree.setDepth(0);
 		
 		search.mini(lookAheadDepth, this.darkEvaluator, board, pvTree, this.generator, this);
-		//System.out.println("best move: " + pvTree.getPvNodes().peekLast().getMoveStringWithRating());
 		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
 	}
 	
 	public void setGenerator(MoveGenerator generator) {
 		this.generator = generator;
-	}
-
-	public void setBoard(Board board) {
-		this.board = board;
 	}
 
 	public Evaluate getLightEvaluator() {
@@ -123,20 +97,16 @@ public class Game {
 		this.darkEvaluator = darkEvaluator;
 	}
 	
-	public int enPassantSquare(Color color) {
-		int enPassantSquare = -1;
-		int latestIndex = getLatestBoardIndex();
-		
-		return enPassantSquare;
-	}
-	
 	public boolean calculateCanCastle(Color color, MoveType moveType) {
 		boolean result = true;
 		boolean lightSide = color == Color.LIGHT;
-		if(castleBlocked(color, moveType)) {
+		
+		boolean hasCastledYet = lightSide ? hasLightCastledYet : hasDarkCastledYet;
+		
+		if(castleBlocked(color, moveType) || hasCastledYet) {
 			return false;
 		}
-		boolean hasCastledYet = lightSide ? hasLightCastledYet : hasDarkCastledYet;
+		
 		int i = lightSide ? 1 : 2;
 		int initialKingSq = lightSide ? 4 : 60;
 		
@@ -148,10 +118,11 @@ public class Game {
 		}
 		if(!hasCastledYet) {
 			while (state[i] != null) {
-				Move historicalMove = state[i].getTransitionMoveFromPreviousBoard();
+				Board board = state[i];
+				Move historicalMove = board.getTransitionMoveFromPreviousBoard();
 				//if king and rook castled this flag could still return false (they didnt move, because it only takes non castling moves into account) fixed?
-				boolean hasKingMoved = historicalMove.getFrom() == initialKingSq
-						&& new ColoredPiece(PieceType.KING, color).equals(historicalMove.getFromPiece()) && (historicalMove.getMoveType() != MoveType.CASTLESHORT || historicalMove.getMoveType() != MoveType.CASTLELONG);
+				boolean hasKingMoved = (historicalMove.getFrom() == initialKingSq
+						&& new ColoredPiece(PieceType.KING, color).equals(historicalMove.getFromPiece())) && (historicalMove.getMoveType() != MoveType.CASTLESHORT || historicalMove.getMoveType() != MoveType.CASTLELONG );
 				
 				boolean hasRookMoved = historicalMove.getFrom() == initialRookSq
 						&& new ColoredPiece(PieceType.ROOK, color).equals(historicalMove.getFromPiece());
@@ -167,9 +138,7 @@ public class Game {
 	
 	private boolean castleBlocked(Color color, MoveType moveType) {
 		boolean isCastlingBlocked = false;
-		Board latestBoard = getLatestBoard(); //maybe move this 
-		//to argument and move this to king or some better place? cuz this has nothing to do with
-		//the game itself?
+		Board latestBoard = getLatestBoard();
 		switch (color) {
 		case LIGHT:
 			switch(moveType) {
@@ -216,7 +185,7 @@ public class Game {
 
 	public void addPositionToGame(Board board) {
 		Move move = board.getTransitionMoveFromPreviousBoard();
-		state[index++] = board;
+		state[++index] = board;
 		if(move.getMoveType() == MoveType.CASTLESHORT || move.getMoveType() == MoveType.CASTLELONG) {
 			if(index % 2 == 0) {
 				hasDarkCastledYet = true;

@@ -7,14 +7,14 @@ import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.piece.ColoredPiece;
 
-public class ComplexMiniMaxEvaluateImpl implements Evaluate {
+public class MiniMaxEvaluateImpl implements Evaluate {
 
 	MaterialValue materialValue = new MaterialValue();
 	MoveGenerator movegen = new MoveGenerator();
 	PieceSquareTable psTable = new PieceSquareTable();
 	
 	@Override
-	public int evaluateMiniMax(Board position) {
+	public int evaluate(Board position) {
 		Board board = Board.deepCopy(position);
 		List<Integer> side = movegen.getAll(Color.LIGHT, board);
 		List<Integer> oppositeSide = movegen.getAll(Color.DARK, board);
@@ -22,13 +22,11 @@ public class ComplexMiniMaxEvaluateImpl implements Evaluate {
 		int oppositeValueSum = 0;
 		for (Integer coordinate : side) {
 			ColoredPiece piece = board.getBoardMapReference().get(coordinate);
-			valueSum += materialValue.getValue(piece)
-					+ psTable.getPSTableValue(piece, coordinate);
+			valueSum += MaterialValue.getValue(piece) + psTable.getPSTableValue(piece, coordinate);
 		}
 		for (Integer coordinate : oppositeSide) {
 			ColoredPiece piece = board.getBoardMapReference().get(coordinate);
-			oppositeValueSum += materialValue.getValue(piece)
-					+ psTable.getPSTableValue(piece, coordinate);
+			oppositeValueSum += MaterialValue.getValue(piece) + psTable.getPSTableValue(piece, coordinate);
 		}
 		return (valueSum-oppositeValueSum);
 	}

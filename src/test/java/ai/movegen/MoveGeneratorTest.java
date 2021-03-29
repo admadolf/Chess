@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ai.eval.AttackDefenseMap;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.MoveType;
@@ -544,312 +543,6 @@ public class MoveGeneratorTest {
 		assertEquals(expected, actual);
 	}
 	
-	@Test
-	public void attackDefenseMapTest() {
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 25);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 27);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 4);
-		ColoredPiece[][] arr = generator.generateMap(10, testBoard, MoveType.ATTACK);
-		Set<Integer> moveList = generator.generateMoves(10, testBoard, new Game())
-				.stream().map(Move::getTo).collect(Collectors.toSet());
-		//AttackDefenseMap admap = new AttackDefenseMap();
-		//admap.setAttackDefenseMap(arr);
-		System.out.println(moveList);
-		System.out.println(Arrays.deepToString(arr));
-		System.out.println(testBoard);
-		int k = 0;
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = 0; j < arr.length; j++) {
-				k++;
-				if(arr[i][j]!=null) {
-					System.out.println("map " + arr[i][j] );	
-				}
-				
-			}
-		}
-		AttackDefenseMap adMap = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.ATTACK);
-		AttackDefenseMap adMap1 = new AttackDefenseMap(testBoard, Color.DARK, MoveType.ATTACK);
-		System.out.println(adMap.countPieces());
-		System.out.println(adMap1.countPieces());
-		//System.out.println(Arrays.deepToString(admap.attackedBySquare(10)));
-		System.out.println("eoe " + k );
-		
-		//System.out.println(arr[10][25]);
-		//System.out.println(arr[10][20]);
-	}
-	
-	@Test
-	public void attackDefenseMapAttackTest() {
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 37);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.ATTACK);
-		System.out.println(map.getAttackDefenseMap()[10][37]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapBishopDefenseTestDark() {
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 37);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 28);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 24);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][37]);
-		assertEquals(new ColoredPiece(PieceType.BISHOP, Color.DARK), map.getAttackDefenseMap()[10][24]);
-		assertEquals(null, map.getAttackDefenseMap()[10][28]);
-		//System.out.println(map.getAttackDefenseMap()[10][37]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapBishopDefenseTestLIGHT() {
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 37);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 28);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 24);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][37]);
-		assertEquals(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), map.getAttackDefenseMap()[10][24]);
-		assertEquals(null, map.getAttackDefenseMap()[10][28]);
-		//System.out.println(map.getAttackDefenseMap()[10][37]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseRookDarkInbetweenEnemyTest() {
-		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 26);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 42);
-		System.out.println(testBoard);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][42]);
-		assertEquals(null, map.getAttackDefenseMap()[10][26]);
-		System.out.println(map.getAttackDefenseMap()[10][42]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseRookLightInbetweenEnemyTest() {
-		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 26);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 42);
-		System.out.println(testBoard);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][42]);
-		assertEquals(null, map.getAttackDefenseMap()[10][26]);
-		System.out.println(map.getAttackDefenseMap()[10][42]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseRookInbetweenFriendTest() {
-		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 26);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 42);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][42]);
-		assertEquals(new ColoredPiece(PieceType.ROOK, Color.DARK), map.getAttackDefenseMap()[10][26]);
-		System.out.println(map.toString());
-	}
-	
-	
-	
-	@Test
-	public void attackDefenseMapAttackRookLightTest() {
-		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT), 27);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 26);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 24);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 35);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 31);
-		System.out.println(testBoard);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.ATTACK);
-		assertEquals(null, map.getAttackDefenseMap()[27][26]);
-		System.out.println(map.getAttackDefenseMap()[27][24]);
-		assertEquals(new ColoredPiece(PieceType.ROOK, Color.LIGHT), map.getAttackDefenseMap()[27][35]);
-		assertEquals(new ColoredPiece(PieceType.ROOK, Color.LIGHT), map.getAttackDefenseMap()[27][31]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseKnightDarkTest() {
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 20);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 4);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 16);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][4]);
-		assertEquals(new ColoredPiece(PieceType.KNIGHT, Color.DARK), map.getAttackDefenseMap()[10][20]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseKnightLightTest() {
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 20);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 4);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 16);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][4]);
-		assertEquals(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), map.getAttackDefenseMap()[10][20]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseQueentLightTest() {
-		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), 27);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 3);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 41);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 34);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 59);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 31);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 26);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 24);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 29);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 63);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 11);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		System.out.println(testBoard.toString());
-		assertEquals(null, map.getAttackDefenseMap()[27][3]);
-		assertEquals(null, map.getAttackDefenseMap()[27][41]);
-		assertEquals(null, map.getAttackDefenseMap()[27][26]);
-		assertEquals(null, map.getAttackDefenseMap()[27][31]);
-		assertEquals(null, map.getAttackDefenseMap()[27][59]);
-		assertEquals(null, map.getAttackDefenseMap()[27][24]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][63]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][34]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][29]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][11]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseQueentDarkTest() {
-		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), 27);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 3);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 41);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 34);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 59);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 31);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 26);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 24);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 29);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 63);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 11);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		System.out.println(testBoard.toString());
-		assertEquals(null, map.getAttackDefenseMap()[27][3]);
-		assertEquals(null, map.getAttackDefenseMap()[27][41]);
-		assertEquals(null, map.getAttackDefenseMap()[27][26]);
-		assertEquals(null, map.getAttackDefenseMap()[27][31]);
-		assertEquals(null, map.getAttackDefenseMap()[27][59]);
-		assertEquals(null, map.getAttackDefenseMap()[27][24]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][63]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][34]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][29]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][11]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapAttackQueentDarkTest() {
-		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.DARK), 27);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 3);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 41);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 34);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 59);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 31);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 26);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 24);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 29);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 63);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 11);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 13);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 20);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.ATTACK);
-		System.out.println(testBoard.toString());
-		assertEquals(null, map.getAttackDefenseMap()[27][3]);
-		assertEquals(null, map.getAttackDefenseMap()[27][41]);
-		assertEquals(null, map.getAttackDefenseMap()[27][26]);
-		assertEquals(null, map.getAttackDefenseMap()[27][31]);
-		assertEquals(null, map.getAttackDefenseMap()[27][59]);
-		assertEquals(null, map.getAttackDefenseMap()[27][24]);
-		assertEquals(null, map.getAttackDefenseMap()[27][20]);
-		assertEquals(null, map.getAttackDefenseMap()[27][13]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.DARK), map.getAttackDefenseMap()[27][63]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.DARK), map.getAttackDefenseMap()[27][34]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.DARK), map.getAttackDefenseMap()[27][29]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.DARK), map.getAttackDefenseMap()[27][11]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapAttackQueentLightTest() {
-		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), 27);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 3);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 41);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 34);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 59);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 31);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 26);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 24);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 29);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 63);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 11);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK), 13);
-		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 20);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.ATTACK);
-		System.out.println(testBoard.toString());
-		assertEquals(null, map.getAttackDefenseMap()[27][3]);
-		assertEquals(null, map.getAttackDefenseMap()[27][41]);
-		assertEquals(null, map.getAttackDefenseMap()[27][26]);
-		assertEquals(null, map.getAttackDefenseMap()[27][31]);
-		assertEquals(null, map.getAttackDefenseMap()[27][59]);
-		assertEquals(null, map.getAttackDefenseMap()[27][24]);
-		assertEquals(null, map.getAttackDefenseMap()[27][20]);
-		assertEquals(null, map.getAttackDefenseMap()[27][13]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][63]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][34]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][29]);
-		assertEquals(new ColoredPiece(PieceType.QUEEN, Color.LIGHT), map.getAttackDefenseMap()[27][11]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseQueenDarkTest() {
-		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 20);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 4);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 16);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][4]);
-		assertEquals(new ColoredPiece(PieceType.KNIGHT, Color.DARK), map.getAttackDefenseMap()[10][20]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseKingLightTest() {
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 20);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 4);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 16);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.LIGHT, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][4]);
-		assertEquals(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), map.getAttackDefenseMap()[10][20]);
-		System.out.println(map.toString());
-	}
-	
-	@Test
-	public void attackDefenseMapDefenseKingDarkTest() {
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 10);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 20);
-		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT), 4);
-		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 16);
-		AttackDefenseMap map = new AttackDefenseMap(testBoard, Color.DARK, MoveType.DEFENSE);
-		assertEquals(null, map.getAttackDefenseMap()[10][4]);
-		assertEquals(new ColoredPiece(PieceType.KNIGHT, Color.DARK), map.getAttackDefenseMap()[10][20]);
-		System.out.println(map.toString());
-	}
 	
 	@Test
 	public void kingCantGenerateMoveIntoChess() {
@@ -883,9 +576,6 @@ public class MoveGeneratorTest {
 		enPassantGame.addPositionToGame(Board.transposePositionToNewBoardInstance(enPassantGame.getLatestBoard(), new Move(28,36)));
 		Set<Move> moves = generator.generateMoves(51, enPassantGame.getLatestBoard(), enPassantGame)
 				.stream().collect(Collectors.toSet());
-		//enPassantGame.addPositionToGame(Board.transposePositionToNewBoardInstance(enPassantGame.getLatestBoard(), new Move(MoveType.ENPASSANTFLAG,51,35)));
-		//ha each color lep pawn init mezojerol duplat es van mellette enemy pawn duplalepes utan en passant flaggel generalodjon a move
-		//ha van en passant flag akkor lehessen oda takelni
 		Move moveThatTriggersEnPassantFlag = null;
 		for (Move move : moves) {
 			if(move.getMoveType() == MoveType.ENPASSANTFLAG) {
@@ -904,6 +594,24 @@ public class MoveGeneratorTest {
 		
 	}
 	
+	@Test
+	public void canCastleIfOtherCastled() {
+		Game game = returnProperlySetUpGameWithBoardToCastleTestBackRankNonBlock();
+		//System.out.println(Arrays.deepToString(game.getState()));
+		Move darkCastle = null;
+		//pick a castle move
+		for(Move move : generator.generateMoves(60, game.getLatestBoard(), game)) {
+			if(move.getMoveType() == MoveType.CASTLESHORT) {
+				darkCastle = move;
+			}
+		}
+		//game.addPositionToGame(Board.transposePositionToNewBoardInstance(game.getLatestBoard(), new Move(48, 40)));
+		game.addPositionToGame(Board.transposePositionToNewBoardInstance(game.getLatestBoard(), darkCastle));
+		List<Move> generatedMoves = generator.generateMoves(4, game.getLatestBoard(), game);
+		//TODO test other color
+		assertTrue(generatedMoves.size()==4);
+	}
+	
 	private Game returnGameWithBoardToCastleTestBackRankNonBlock() {
 		Game castleTestBackRankNonBlock = new Game();
 		castleTestBackRankNonBlock.getState()[0].grabPieceAndCleanFrom(1);
@@ -916,7 +624,28 @@ public class MoveGeneratorTest {
 		castleTestBackRankNonBlock.getState()[0].grabPieceAndCleanFrom(59);
 		castleTestBackRankNonBlock.getState()[0].grabPieceAndCleanFrom(61);
 		castleTestBackRankNonBlock.getState()[0].grabPieceAndCleanFrom(62);
+		//castleTestBackRankNonBlock.addPositionToGame();
 		return castleTestBackRankNonBlock;
+	}
+	
+	private Game returnProperlySetUpGameWithBoardToCastleTestBackRankNonBlock() {
+		Game castleTestTwoPlayers = new Game();
+		Board nextBoard = Board.deepCopy(castleTestTwoPlayers.getLatestBoard());
+		nextBoard.grabPieceAndCleanFrom(1);
+		nextBoard.grabPieceAndCleanFrom(2);
+		nextBoard.grabPieceAndCleanFrom(3);
+		nextBoard.grabPieceAndCleanFrom(5);
+		nextBoard.grabPieceAndCleanFrom(6);
+		nextBoard.grabPieceAndCleanFrom(57);
+		nextBoard.grabPieceAndCleanFrom(58);
+		nextBoard.grabPieceAndCleanFrom(59);
+		nextBoard.grabPieceAndCleanFrom(61);
+		nextBoard.grabPieceAndCleanFrom(62);
+		nextBoard.setTransitionMoveFromPreviousBoard(new Move(8, 16));
+		ColoredPiece p = nextBoard.grabPieceAndCleanFrom(8);
+		nextBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 16);
+		castleTestTwoPlayers.addPositionToGame(nextBoard);
+		return castleTestTwoPlayers;
 	}
 	
 }

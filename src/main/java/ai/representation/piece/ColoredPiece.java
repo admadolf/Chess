@@ -5,9 +5,9 @@ import ai.representation.PieceType;
 
 public class ColoredPiece {
 
-	public final PieceType pieceType;
+	private final PieceType pieceType;
 		
-	public final Color color;
+	private final Color color;
 	
 	public ColoredPiece(PieceType pieceType,Color color) {
 		this.pieceType = pieceType;

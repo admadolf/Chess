@@ -1,8 +1,7 @@
 package ai;
 
-import ai.eval.ComplexMiniMaxEvaluateImpl;
+import ai.eval.MiniMaxEvaluateImpl;
 import ai.eval.Evaluate;
-import ai.eval.MaterialMiniMaxEvaluateImpl;
 import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
@@ -47,7 +46,7 @@ public class Pg {
 	
 	public static void firstExample(Board board) {
 		board.initEmptyBoard();
-		Evaluate evaluator = new MaterialMiniMaxEvaluateImpl();
+		Evaluate evaluator = new MiniMaxEvaluateImpl();
 		
 		board.place(new Rook(Color.LIGHT), 9);
 		board.place(new Rook(Color.DARK), 11);
@@ -88,7 +87,7 @@ public class Pg {
 //		Board.place(new EmptyPiece(), 61, board);
 //		Board.place(new EmptyPiece(), 58, board);
 //		Board.place(new Queen(Color.LIGHT), 32, board);
-		Evaluate complexEval = new ComplexMiniMaxEvaluateImpl();
+		Evaluate complexEval = new MiniMaxEvaluateImpl();
 		MiniMaxSearch miniMax = new MiniMaxSearch(board);
 		Node pvTree = new Node();
 		pvTree.setDepth(0);

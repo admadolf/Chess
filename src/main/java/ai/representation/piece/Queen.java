@@ -12,7 +12,7 @@ public class Queen extends ColoredPiece {
 	}
 
 	public static List<Integer> getMoveVectors() {
-		return PieceType.QUEEN.moveVectors;
+		return PieceType.QUEEN.getMoveVectors();
 	}
 
 }

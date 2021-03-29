@@ -12,7 +12,7 @@ public class Rook extends ColoredPiece {
 	}
 
 	public static List<Integer> getMoveVectors() {
-		return PieceType.ROOK.moveVectors;
+		return PieceType.ROOK.getMoveVectors();
 	}
 	
 }

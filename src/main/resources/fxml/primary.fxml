@@ -106,7 +106,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
             <MenuItem mnemonicParsing="false" onAction="#newGame" text="New Game" />
-              <MenuItem mnemonicParsing="false" onAction="#switchToSecondary" text="Close" />
+            <MenuItem mnemonicParsing="false" onAction="#showConfigPopup" text="Config" />
+              <!--  >MenuItem mnemonicParsing="false" onAction="#switchToSecondary" text="Close" /-->
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
