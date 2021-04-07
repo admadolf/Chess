@@ -13,8 +13,6 @@ import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.MoveType;
 import ai.representation.Node;
-import ai.representation.PieceType;
-import ai.representation.piece.EmptyPiece;
 
 public class GameTest {
 
@@ -70,64 +68,6 @@ public class GameTest {
 		castleTestBackRankNonBlockKingRookMoved.getState()[1] = lightKingSideRookMoved;
 		Board darkKingSideRookMoved = Board.transposePositionToNewBoardInstance(boardStateQueenRooksMoved, new Move(63, 61));
 		castleTestBackRankNonBlockKingRookMoved.getState()[2] = darkKingSideRookMoved;
-	}
-	
-	@Test
-	public void a() {
-		
-		/*for (Node node : moveList) {
-			System.out.println(node.getPosition());
-			System.out.println(node.getPosition().getTransitionMoveFromPreviousBoard());
-		}*/
-		int i = 1;
-		System.out.println("initial position:\n" + game.getState()[i-1]);
-		for (;i<20;i++) {
-			Board board = game.getState()[i-1];
-			if(i%2 == 1) {
-				System.out.println("LIGHT MOVE");
-				LinkedList<Node> moveList = game.moveLight(2, board);
-				//Collections.shuffle(moveList);
-				game.getState()[i] = moveList.peekLast().getPosition();
-				System.out.println("NEXT BOARD");
-				System.out.println(game.getState()[i]);
-				//System.out.println("SCORE: " + game.getDarkEvaluator().evaluateMiniMax(game.getState()[i]));
-			}else {
-				System.out.println("DARK MOVE:");
-
-				if(i==12) {
-					System.out.println(i);
-				}
-				LinkedList<Node> moveList = game.moveDark(2, board);
-				//Collections.shuffle(moveList);
-				//System.out.println("moveList: " + moveList);
-				//100000 a king erteke  + az allas erteke sumja mar nagyobb es a minimaxsearchben levo min value , csinalni vmit ezzel
-				//lehet ilyen esetekre kene vmi random lepest generalni vagy megirni vegre h a kinget ki kelljen vinni sakkbol
-				game.getState()[i] = moveList.peekLast().getPosition();
-				System.out.println("NEXT BOARD");
-				System.out.println("score: " + moveList.peekLast().getScore());
-				System.out.println(game.getState()[i]);
-				//System.out.println("SCORE: " + game.getDarkEvaluator().evaluateMiniMax(game.getState()[i]));
-			}
-			
-		}
-		
-		int j = 0;
-		
-		System.out.println(game.calculateCanCastle(Color.LIGHT, MoveType.CASTLESHORT));
-		System.out.println(game.calculateCanCastle(Color.DARK, MoveType.CASTLELONG));
-		System.out.println(game.calculateCanCastle(Color.DARK, MoveType.CASTLESHORT));
-		//game.canCastle(Color.LIGHT);
-		/*while (game.getState()[j] != null) {
-			System.out.println("NEXT BOARD");
-			System.out.println(game.getState()[j]);
-			System.out.println("SCORE: " + game.getDarkEvaluator().evaluateMiniMax(game.getState()[j]));
-			++j;
-		}*/
-		
-		//game.getState();
-		//Set<Integer> expected =;
-		//Set<Integer> actual = new HashSet<Integer>(generator.generateMoves(10, testBoard));
-		//assertEquals(expected, actual);
 	}
 	
 	@Test

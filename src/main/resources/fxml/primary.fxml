@@ -107,19 +107,9 @@
             <items>
             <MenuItem mnemonicParsing="false" onAction="#newGame" text="New Game" />
             <MenuItem mnemonicParsing="false" onAction="#showConfigPopup" text="Config" />
-              <!--  >MenuItem mnemonicParsing="false" onAction="#switchToSecondary" text="Close" /-->
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+          
         </menus>
       </MenuBar>
    </children>
