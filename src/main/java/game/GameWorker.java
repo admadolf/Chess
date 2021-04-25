@@ -7,6 +7,7 @@ import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
 import ai.representation.Board;
 import ai.representation.Color;
+import ai.representation.MoveType;
 
 public class GameWorker{
 
@@ -61,7 +62,10 @@ public class GameWorker{
 		System.out.println(possibleMoves);
 		for (Move move : possibleMoves) {
 			System.out.println("finalizemove: " + move.getFrom() + " " + move.getTo());
-			if( move.getFrom() == from && move.getTo() == to || move.getCastleKingFrom() == from && move.getCastleRookFrom() == to ) {
+			boolean nonCastleMove = from.equals(move.getFrom()) && to.equals(move.getTo());
+			boolean castleMove = move.getMoveType() == MoveType.CASTLELONG || move.getMoveType() == MoveType.CASTLESHORT && move.getCastleKingFrom() == from && move.getCastleRookFrom() == to;
+			boolean validMoveCond = nonCastleMove || castleMove ;
+			if( validMoveCond) {
 				game.addPositionToGame(Board.transposePositionToNewBoardInstance(game.getLatestBoard(), move));
 				System.out.println("move chosen: " + move);
 				return true;

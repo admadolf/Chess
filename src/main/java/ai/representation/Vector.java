@@ -7,8 +7,6 @@ package ai.representation;
  */
 public class Vector {
 
-	//NORTH,NE,EAST,SE,SOUTH,SW,WEST,NW
-	//ezek lehetnenek privat es getterekkel visszaadnak uj integer instancakat
 	public static final int NORTH = 8;
 	
 	public static final int NE = 9;
