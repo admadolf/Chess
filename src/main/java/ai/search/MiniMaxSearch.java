@@ -43,7 +43,6 @@ public class MiniMaxSearch {
 			}
 			int score = mini.mini(depthLimit, evaluator, nextPosition, node, movegen, game);
 			node.setScore(score);
-			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
 			if(score > max) { //TODO might set this to >= to rise the number
 				max = score;
 				//bubbling things up to root
@@ -78,7 +77,6 @@ public class MiniMaxSearch {
 			}
 			int score = maxi.maxi(depthLimit, evaluator, nextPosition, node, movegen, game);
 			node.setScore(score);
-			Move move = nextPosition.getTransitionMoveFromPreviousBoard();
 			if(score < min) { //TODO might set this to >= to rise the number
 				min = score;
 				//bubbling things up to root
