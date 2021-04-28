@@ -303,7 +303,6 @@ public class MoveGenerator {
 			ColoredPiece pieceOnAttackerSquare = boardClone.getBoardMapReference().get(move.getTo());
 			if (helper.getColor() == pieceOnAttackerSquare.getColor().opposite()
 					&& pieceOnAttackerSquare.getPieceType() == helper.getPieceType()) {
-				//System.out.println("MoveGenerator [isAttackedBy]: " + attackedPiece + "on square coord: " + square + " is attacked by " + pieceOnAttackerSquare + piece + " on square coord: " + sq);
 				return true;
 			}
 		}

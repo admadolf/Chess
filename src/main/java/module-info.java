@@ -9,7 +9,6 @@ module chess {
 	requires javafx.fxml;
 	
     requires javafx.controls;
-    requires javafx.media;
     opens ui to javafx.fxml;
     exports ui;
 
