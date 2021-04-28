@@ -182,7 +182,6 @@ public class Board {
 		} else if(move.getMoveType() == MoveType.ENPASSANT){
 			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());
 			nextBoard.place(piece, move.getTo());
-			System.out.println(move.getEnPassantToBeCaptured());
 			nextBoard.grabPieceAndCleanFrom(move.getEnPassantToBeCaptured());
 		} else if (move.getMoveType() == MoveType.PROMOTION) {
 			ColoredPiece piece = nextBoard.grabPieceAndCleanFrom(move.getFrom());

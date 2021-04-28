@@ -47,9 +47,7 @@ public class GameWorker{
 			if(playerPieceList.contains(from)) {
 				for (Move move : moveGenerator.generateMoves(from, game.getLatestBoard(), game)) {
 					Board afterMoveBoard = Board.transposePositionToNewBoardInstance(game.getLatestBoard(), move);
-					System.out.println("looping");
 					if(!moveGenerator.isKingInCheck(playerColor, afterMoveBoard, game)) {
-						System.out.println("move added: " + move);
 						possibleMoves.add(move);
 					}
 				}
@@ -58,16 +56,12 @@ public class GameWorker{
 	}
 	
 	public boolean finalizeMoveIfValid(Integer from, Integer to) {
-		System.out.println("finalizemove: " + from + " " + to);
-		System.out.println(possibleMoves);
 		for (Move move : possibleMoves) {
-			System.out.println("finalizemove: " + move.getFrom() + " " + move.getTo());
 			boolean nonCastleMove = from.equals(move.getFrom()) && to.equals(move.getTo());
 			boolean castleMove = move.getMoveType() == MoveType.CASTLELONG || move.getMoveType() == MoveType.CASTLESHORT && move.getCastleKingFrom() == from && move.getCastleRookFrom() == to;
 			boolean validMoveCond = nonCastleMove || castleMove ;
 			if( validMoveCond) {
 				game.addPositionToGame(Board.transposePositionToNewBoardInstance(game.getLatestBoard(), move));
-				System.out.println("move chosen: " + move);
 				return true;
 			}
 		}

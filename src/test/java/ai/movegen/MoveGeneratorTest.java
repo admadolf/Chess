@@ -455,7 +455,6 @@ public class MoveGeneratorTest {
 	public void isAttackedByKnight() {
 		testBoard.place(new Bishop(Color.LIGHT), 10);
 		testBoard.place(new Knight(Color.DARK), 27);
-		System.out.println(testBoard);
 		boolean actual = generator.isAttackedBy(10, new Knight(Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
@@ -464,7 +463,6 @@ public class MoveGeneratorTest {
 	public void isAttackedByBishop() {
 		testBoard.place(new Bishop(Color.LIGHT), 10);
 		testBoard.place(new Rook(Color.DARK), 58);
-		System.out.println(testBoard);
 		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.ROOK,Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
@@ -497,7 +495,6 @@ public class MoveGeneratorTest {
 	public void isAttackedByKing() { //TODO king logic to prevent them from getting close
 		testBoard.place(new Bishop(Color.LIGHT), 10);
 		testBoard.place(new King(Color.DARK), 2);
-		System.out.println(testBoard);
 		boolean actual = generator.isAttackedBy(10, new King(Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
@@ -518,7 +515,6 @@ public class MoveGeneratorTest {
 		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),testedPiecePosition);
 		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),9);
 		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK),19);
-		System.out.println(testBoard);
 		Set<Integer> expected = new HashSet<Integer>(Set.of(17, 18, 19, 11, 1, 3));
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -551,13 +547,11 @@ public class MoveGeneratorTest {
 		testBoard.place(new Rook(Color.DARK),63);
 		Set<Integer> actual = generator.generateMoves(kingPosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
-		System.out.println(actual);
 		assertFalse(actual.contains(15) && actual.contains(7) && actual.contains(23));
 	}
 	
 	@Test
 	public void castleTest() {
-		System.out.println(castleTestBoard);
 		int lightKingPosition = 4;
 		int darkKingPosition = 60;
 		Set<Move> lightActual = generator.generateMoves(lightKingPosition, castleTestBoard, castleTestGame)
@@ -597,7 +591,6 @@ public class MoveGeneratorTest {
 	@Test
 	public void canCastleIfOtherCastled() {
 		Game game = returnProperlySetUpGameWithBoardToCastleTestBackRankNonBlock();
-		//System.out.println(Arrays.deepToString(game.getState()));
 		Move darkCastle = null;
 		//pick a castle move
 		for(Move move : generator.generateMoves(60, game.getLatestBoard(), game)) {

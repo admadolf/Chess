@@ -114,6 +114,7 @@
       </MenuBar>
    </children>
    <stylesheets>
-    <URL value="@../styles/Styles.css" />
+   <!-- in eclipse ide replace below for this  >URL value="@../styles/Styles.css" /-->
+    <URL value="@styles/Styles.css" />
 </stylesheets>
 </AnchorPane>
