@@ -37,7 +37,7 @@ public class Board {
 	
 	public Board(Map<Integer,ColoredPiece> boardMap) {
 		super();
-		this.board = new TreeMap<>(boardMap);
+		this.board = new HashMap<>(boardMap);
 	}
 
 	public static Board getASetuppedBoard() {
@@ -46,7 +46,7 @@ public class Board {
 		return board;
 	}
 	
-	public void initBoard() {
+	private void initBoard() {
 		board.put(56, new ColoredPiece(PieceType.ROOK,Color.DARK));
 		board.put(57, new ColoredPiece(PieceType.KNIGHT,Color.DARK));
 		board.put(58, new ColoredPiece(PieceType.BISHOP,Color.DARK));

@@ -1,5 +1,8 @@
 package ai.representation.piece;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import ai.representation.Color;
 import ai.representation.PieceType;
 
@@ -104,8 +107,6 @@ public class ColoredPiece {
 		if (pieceType != other.pieceType)
 			return false;
 		return true;
-	}
-
-	
+	}	
 	
 }

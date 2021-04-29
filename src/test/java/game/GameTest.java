@@ -3,8 +3,6 @@ package game;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.LinkedList;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +10,6 @@ import ai.movegen.Move;
 import ai.representation.Board;
 import ai.representation.Color;
 import ai.representation.MoveType;
-import ai.representation.Node;
 
 public class GameTest {
 
@@ -134,8 +131,6 @@ public class GameTest {
 	public void testAddPositionToGame() {
 		Game game = new Game();
 		game.addPositionToGame(Board.transposePositionToNewBoardInstance(game.getLatestBoard(), new Move(12,28)));
-		System.out.println(game.getLatestBoard());
-		System.out.println(game.getIndex());
 	}
 	
 }
