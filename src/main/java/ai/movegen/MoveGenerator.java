@@ -1,21 +1,19 @@
 package ai.movegen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.PieceType;
-import ai.representation.piece.Bishop;
-import ai.representation.piece.ColoredPiece;
-import ai.representation.piece.Knight;
-import ai.representation.piece.Pawn;
-import ai.representation.piece.Rook;
-import game.Game;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.Game;
+import representation.MoveType;
+import representation.PieceType;
+import representation.Vector;
 
 /**
  * This
@@ -27,35 +25,35 @@ public class MoveGenerator {
 	/**
 	 * 
 	 * @param from
-	 * @param currentBoardState
+	 * @param currentBoard
 	 * @return possible moves for the piece on a given position
 	 */
-	public List<Move> generateMoves(Integer from, Board currentBoardState, Game game) {
+	public List<Move> generateMoves(Integer from, Board currentBoard, Game game) {
 		List<Move> moveList = new ArrayList<Move>();
-		ColoredPiece piece = currentBoardState.get(from);
+		ColoredPiece piece = currentBoard.get(from);
 		if(piece == null) {
 			throw new RuntimeException("Trying to allocate piece from non existing square with coordinate: " + from);
 		}
 		Color sideColor = piece.getColor();
 		switch (piece.getPieceType()) {
 		case PAWN:
-			moveList.addAll(generatePawnMoves(from, currentBoardState, game, sideColor));
+			moveList.addAll(generatePawnMoves(from, currentBoard, game, sideColor));
 			break;
 		case KNIGHT:
-			moveList.addAll(generateKnightMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateKnightMoves(from, currentBoard, sideColor));
 			break;
 		case BISHOP:
-			moveList.addAll(generateBishopMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
 			break;
 		case QUEEN:
-			moveList.addAll(generateBishopMoves(from, currentBoardState, sideColor));
-			moveList.addAll(generateRookMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
+			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
 			break;
 		case KING:
-			moveList.addAll(generateKingMoves(from, currentBoardState, game, sideColor));
+			moveList.addAll(generateKingMoves(from, currentBoard, game, sideColor));
 			break;
 		case ROOK:
-			moveList.addAll(generateRookMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
 			break;
 		default:
 			break;
@@ -94,20 +92,11 @@ public class MoveGenerator {
 			default:
 			System.err.println("MoveGenerator calling with empty color is not legit");
 		}
-		for (int vector : Bishop.getMoveVectors()) {
+		for (int vector : getMoveVectors(PieceType.KING, sideColor)) {
 			int tmpFrom = from;
 			int to = tmpFrom + vector;
 			Move move = new Move(from, to, currentBoardState.get(from), currentBoardState.get(to));
-			if (isValidBishopMove(tmpFrom, to, currentBoardState, sideColor) && !isKingNearby(from, to, currentBoardState, sideColor) 
-					&& !isKingInCheck(sideColor, Board.transposePositionToNewBoardInstance(currentBoardState, move), game)) {
-				moveList.add(move);
-			}
-		}
-		for (Integer vector : Rook.getMoveVectors()) {
-			Integer tmpFrom = from;
-			Integer to = tmpFrom + vector;
-			Move move = new Move(from, to, currentBoardState.get(from), currentBoardState.get(to));
-			if (isValidRookMove(tmpFrom, to, currentBoardState, sideColor) && !isKingNearby(from, to, currentBoardState, sideColor) 
+			if (isValidBishopMove(tmpFrom, to, currentBoardState, sideColor) && !isKingNearby(to, currentBoardState, sideColor) 
 					&& !isKingInCheck(sideColor, Board.transposePositionToNewBoardInstance(currentBoardState, move), game)) {
 				moveList.add(move);
 			}
@@ -118,7 +107,7 @@ public class MoveGenerator {
 
 	private List<Move> generateRookMoves(Integer from, Board currentBoardState, Color sideColor) {
 		List<Move> moveList = new ArrayList<Move>();
-		for (Integer vector : Rook.getMoveVectors()) {
+		for (Integer vector : getMoveVectors(currentBoardState.get(from))) {
 			Integer tmpFrom = from;
 			Integer to = tmpFrom + vector;
 			while (isValidRookMove(tmpFrom, to, currentBoardState, sideColor)) {
@@ -150,7 +139,7 @@ public class MoveGenerator {
 				moveList.add(enPassantMove2);
 			}
 		}
-		for (Integer vector : Pawn.getMoveVectors(sideColor)) {
+		for (Integer vector : getMoveVectors(currentBoardState.get(from))) {
 			Integer to = from + vector;
 			if (isValidPawnMove(from, to, currentBoardState, sideColor)) {
 				Move move;
@@ -178,7 +167,7 @@ public class MoveGenerator {
 
 	private List<Move> generateKnightMoves(Integer from, Board currentBoardState, Color sideColor) {
 		List<Move> moveList = new ArrayList<Move>();
-		for (Integer vector : Knight.getMoveVectors()) {
+		for (Integer vector : getMoveVectors(currentBoardState.get(from))) {
 			Integer to = from + vector;
 			if (!offTheGrid(to) && currentBoardState.get(to).getColor() != sideColor && rowDistance(from, to) < 3
 					&& columnDistance(from, to) < 3) {
@@ -191,7 +180,7 @@ public class MoveGenerator {
 
 	private List<Move> generateBishopMoves(Integer from, Board currentBoardState, Color sideColor) {
 		List<Move> moveList = new ArrayList<Move>();
-		for (int vector : Bishop.getMoveVectors()) {
+		for (int vector : getMoveVectors(currentBoardState.get(from))) {
 			int tmpFrom = from;
 			int to = tmpFrom + vector;
 			while (isValidBishopMove(tmpFrom, to, currentBoardState, sideColor)) {
@@ -352,34 +341,16 @@ public class MoveGenerator {
 		return false;
 	}
 	
-	private boolean isValidPawnDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		if (sameColumn(from, to)) {
-			return !offTheGrid(to) && Board.isEmptySquare(to, board);
-		} else if (columnDistance(from, to) < 2) {
-			return !offTheGrid(to) && Board.getColorOf(to, board) == sideColor;
-		}
-		return false;
-	}
-
 	private boolean isValidBishopMove(final int from, final int to, final Board board, final Color sideColor) {
 		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor) && rowDistance(from, to) < 2
 				&& columnDistance(from, to) < 2;
 	}
 	
-	private boolean isValidBishopDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		return !offTheGrid(to) && rowDistance(from, to) < 2
-				&& columnDistance(from, to) < 2;
-	}
-
 	private boolean isValidRookMove(final int from, final int to, final Board board, final Color sideColor) {
 		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor)
 				&& (sameRow(from, to) || sameColumn(from, to));
 	}
 	
-	private boolean isValidRookDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		return !offTheGrid(to) && (sameRow(from, to) || sameColumn(from, to));
-	}
-
 	private boolean differentColor(Color colorOne, Color colorTwo) {
 		return colorOne != colorTwo;
 	}
@@ -402,21 +373,22 @@ public class MoveGenerator {
 		return false;
 	}
 	
-	public boolean isKingNearby(Integer tmpFrom,Integer to,Board board, Color sideColor) {
-		//int actualVec = to - tmpFrom;
-		List<Integer> nearbySquares = new ArrayList<Integer>();
-		for (int kingVec : PieceType.KING.getMoveVectors()) {
-			int lookAheadPosition = to + kingVec;
-			nearbySquares.add(lookAheadPosition);
-		}
-		
-		for (Integer square : nearbySquares) {
-			if(board.get(square) != null && board.get(square).equals(new ColoredPiece(PieceType.KING, sideColor.opposite()))) {
-				return true;
+	public boolean isKingNearby(Integer to,Board board, Color sideColor) {
+			List<Integer> nearbySquares = new ArrayList<Integer>();
+			for (int kingVec : getMoveVectors(PieceType.KING, sideColor)) {
+				int lookAheadPosition = to + kingVec;
+				nearbySquares.add(lookAheadPosition);
 			}
-		}
-		return false;
+			
+			for (Integer square : nearbySquares) {
+				if(board.get(square) != null && board.get(square).equals(new ColoredPiece(PieceType.KING, sideColor.opposite()))) {
+					return true;
+				}
+			}
+			
+			return false;
 	}
+	
 	
 	/**
 	 * Fill up helper fields in generated move after a double pawn move noting which pawns are able to capture en passant and
@@ -429,24 +401,73 @@ public class MoveGenerator {
 	 */
 	private void setupEnPassant(Color sideColor, Move move, Board board) {
 		int doubleMoveArrivalSquare = move.getTo();
-		int enPassantOffset = 8;
 		int neighbourSquareOffset = 1;
 		Integer enPassantCandidate1Square = doubleMoveArrivalSquare-neighbourSquareOffset;
 		Integer enPassantCandidate2Square = doubleMoveArrivalSquare+neighbourSquareOffset;
-		ColoredPiece candidateToCapturePiece1 = board.get(enPassantCandidate1Square);
-		ColoredPiece candidateToCapturePiece2 = board.get(enPassantCandidate2Square);
-		if(candidateToCapturePiece1.getPieceType() == PieceType.PAWN && candidateToCapturePiece1.getColor().opposite() == sideColor && isValidPawnMove(move.getFrom(), enPassantCandidate1Square, board, sideColor)) {
-			move.setEnPassantCapturer1(enPassantCandidate1Square);
-			move.setEnPassantArrivalSquareAfterTake(sideColor == Color.LIGHT ? doubleMoveArrivalSquare - enPassantOffset : doubleMoveArrivalSquare + enPassantOffset);
-			move.setEnPassantToBeCaptured(doubleMoveArrivalSquare);
-			move.setMoveType(MoveType.ENPASSANTFLAG);
-		}
-		if(candidateToCapturePiece2.getPieceType() == PieceType.PAWN && candidateToCapturePiece2.getColor().opposite() == sideColor&& isValidPawnMove(move.getFrom(), enPassantCandidate2Square, board, sideColor)) {
-			move.setEnPassantCapturer2(enPassantCandidate2Square);
+		setupEnPassantCapturer(sideColor, move, board, doubleMoveArrivalSquare, enPassantCandidate1Square);
+		setupEnPassantCapturer(sideColor, move, board, doubleMoveArrivalSquare, enPassantCandidate2Square);
+	}
+
+
+	private void setupEnPassantCapturer(Color sideColor, Move move, Board board, int doubleMoveArrivalSquare,
+			Integer enPassantCandidateSquare) {
+		int enPassantOffset = 8;
+		ColoredPiece candidateToCapturePiece = board.get(enPassantCandidateSquare);
+		if(candidateToCapturePiece.getPieceType() == PieceType.PAWN && candidateToCapturePiece.getColor().opposite() == sideColor && isValidPawnMove(move.getFrom(), enPassantCandidateSquare, board, sideColor)) {
+			move.setEnPassantCapturer1(enPassantCandidateSquare);
 			move.setEnPassantArrivalSquareAfterTake(sideColor == Color.LIGHT ? doubleMoveArrivalSquare - enPassantOffset : doubleMoveArrivalSquare + enPassantOffset);
 			move.setEnPassantToBeCaptured(doubleMoveArrivalSquare);
 			move.setMoveType(MoveType.ENPASSANTFLAG);
 		}
 	}
 	
+	private List<Integer> getMoveVectors(PieceType pieceType, Color color) {
+		switch (pieceType) {
+		case PAWN:
+			switch(color) {
+			case DARK:
+				return Arrays.asList(new Integer[] {Vector.SOUTH,Vector.SW,Vector.SE});
+			case LIGHT:
+				return Arrays.asList(new Integer[] {Vector.NORTH,Vector.NW,Vector.NE});
+			default:
+				break;
+			}
+		case KNIGHT:
+			return Arrays.asList(new Integer[] {
+					Vector.NORTH+Vector.NW, 
+					Vector.NORTH+Vector.NE,
+					Vector.EAST+Vector.NE,
+					Vector.EAST+Vector.SE,
+					Vector.SOUTH+Vector.SE,
+					Vector.SOUTH+Vector.SW,
+					Vector.WEST+Vector.SW,
+					Vector.WEST+Vector.NW});
+		case BISHOP:
+			return Arrays.asList(new Integer[] {Vector.NW,Vector.NE,Vector.SE,Vector.SW});
+		case QUEEN:
+			return Arrays.asList(
+					new Integer[] {
+							Vector.NW,Vector.NE,Vector.SE,Vector.SW,
+							Vector.NORTH,Vector.EAST,Vector.SOUTH,Vector.WEST
+					});
+		case KING:
+			return Arrays.asList(new Integer[] {
+					Vector.NW,Vector.NE,Vector.SE,Vector.SW,
+					Vector.NORTH,Vector.EAST,Vector.SOUTH,Vector.WEST
+			});
+		case ROOK:
+			return Arrays.asList(new Integer[] {
+					Vector.NORTH,
+					Vector.EAST,
+					Vector.SOUTH,
+					Vector.WEST});
+		default:
+			return Arrays.asList(new Integer[] {});
+		}
+	}
+	
+	private List<Integer> getMoveVectors(ColoredPiece coloredPiece) {
+		return getMoveVectors(coloredPiece.getPieceType(), coloredPiece.getColor());
+	}
+
 }

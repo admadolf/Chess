@@ -1,4 +1,4 @@
-package ai.representation;
+package representation;
 
 /**
  * Move vectors according to compass rose for little endian rank file mapping

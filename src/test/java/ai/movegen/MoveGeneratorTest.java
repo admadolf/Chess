@@ -13,18 +13,12 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.PieceType;
-import ai.representation.piece.Bishop;
-import ai.representation.piece.ColoredPiece;
-import ai.representation.piece.King;
-import ai.representation.piece.Knight;
-import ai.representation.piece.Pawn;
-import ai.representation.piece.Queen;
-import ai.representation.piece.Rook;
-import game.Game;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.Game;
+import representation.MoveType;
+import representation.PieceType;
 
 public class MoveGeneratorTest {
 
@@ -50,7 +44,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight10() {
-		testBoard.place(new Knight(Color.LIGHT),10);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT,Color.LIGHT),10);
 		Set<Integer> expected = Stream.of(25, 27, 4, 20, 0, 16).collect(Collectors.toSet());
 		Set<Integer> actual = new HashSet<Move>(generator.generateMoves(10, testBoard, new Game()))
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -59,7 +53,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight5() {
-		testBoard.place(new Knight(Color.LIGHT),5);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT),5);
 		Set<Integer> expected = Stream.of(20, 22, 15, 11).collect(Collectors.toSet());
 		Set<Integer> actual = generator.generateMoves(5, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -68,7 +62,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight20() {
-		testBoard.place(new Knight(Color.LIGHT),20);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT),20);
 		Set<Integer> expected = Set.of(35, 37, 30, 14, 5, 3 ,10, 26);
 		Set<Integer> actual = generator.generateMoves(20, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -77,7 +71,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight31() {
-		testBoard.place(new Knight(Color.LIGHT),31);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT),31);
 		Set<Integer> expected = Set.of(46, 14, 21, 37);
 		Set<Integer> actual = generator.generateMoves(31, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -86,7 +80,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight7() {
-		testBoard.place(new Knight(Color.LIGHT),7);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT),7);
 		Set<Integer> expected = Set.of(22, 13);
 		Set<Integer> actual = generator.generateMoves(7, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -95,7 +89,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKnight63() {
-		testBoard.place(new Knight(Color.LIGHT),63);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT,Color.LIGHT),63);
 		Set<Integer> expected = Set.of(46, 53);
 		Set<Integer> actual = generator.generateMoves(63, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -104,7 +98,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testBishop63() {
-		testBoard.place(new Bishop(Color.LIGHT),63);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP,Color.LIGHT),63);
 		Set<Integer> expected = Set.of(54, 45, 36, 27, 18, 9, 0);
 		Set<Integer> actual = generator.generateMoves(63, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -113,8 +107,8 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testBishop27Friend54() {
-		testBoard.place(new Bishop(Color.LIGHT),27);
-		testBoard.place(new Bishop(Color.LIGHT),54);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),27);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),54);
 		Set<Integer> expected = new HashSet<Integer>(Set.of(36, 45, 34, 41, 48, 20, 13, 6, 18, 9, 0));
 		Set<Integer> actual = generator.generateMoves(27, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -123,9 +117,9 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testBishop27FriendlyPieceOn36And0() {
-		testBoard.place(new Bishop(Color.LIGHT),27);
-		testBoard.place(new Pawn(Color.LIGHT), 36);
-		testBoard.place(new Pawn(Color.LIGHT), 0);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),27);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 36);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 0);
 		Set<Integer> expected = new HashSet<Integer>(( Set.of(20, 13, 6, 18, 9 ,34, 41 ,48)));
 		Set<Integer> actual = generator.generateMoves(27, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -134,20 +128,18 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testKing27FriendlyPieceOn36() {
-		testBoard.place(new King(Color.LIGHT),27);
-		testBoard.place(new Pawn(Color.LIGHT), 36);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),27);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT), 36);
 		Set<Integer> expected = new HashSet<Integer>((Set.of(35, 28, 20, 19, 18, 26, 34)));
 		Set<Integer> actual = generator.generateMoves(27, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
-		//Function<? super T, ? extends Stream<? extends R>> mapper
-		//BiConsumer<T, U>
 		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void testBishop63EnemyPieceOn36() {
-		testBoard.place(new Bishop(Color.LIGHT),63);
-		testBoard.place(new Pawn(Color.DARK), 36);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),63);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 36);
 		Set<Integer> expected = Set.of(54, 45, 36);
 		Set<Integer> actual = generator.generateMoves(63, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -156,7 +148,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testBishop36() {
-		testBoard.place(new Bishop(Color.DARK),36);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK),36);
 		Set<Integer> expected = Set.of(43,50,57,45,54,63,29,22,15,27,18,9,0);
 		Set<Integer> actual = generator.generateMoves(36, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -165,7 +157,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testRook36() {
-		testBoard.place(new Rook(Color.LIGHT),36);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT),36);
 		Set<Integer> expected = Set.of(44,52,60,37,38,39,28,20,12,4,35,34,33,32);
 		Set<Integer> actual = generator.generateMoves(36, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -174,7 +166,7 @@ public class MoveGeneratorTest {
 	
 	@Test
 	public void testRook56() {
-		testBoard.place(new Rook(Color.LIGHT),56);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT),56);
 		Set<Integer> expected = Set.of(57,58,59,60,61,62,63,48,40,32,24,16,8,0);
 		Set<Integer> actual = generator.generateMoves(56, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -184,9 +176,9 @@ public class MoveGeneratorTest {
 	@Test
 	public void testRook7Enemy23Friend5Enemy39() {
 		int testedPiecePosition = 7;
-		testBoard.place(new Rook(Color.DARK),testedPiecePosition);
-		testBoard.place(new Rook(Color.DARK),5);
-		testBoard.place(new Rook(Color.LIGHT),23);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK),5);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT),23);
 		Set<Integer> expected = Set.of(15,23,6);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -196,7 +188,7 @@ public class MoveGeneratorTest {
 	@Test
 	public void testQueen12() {
 		int testedPiecePosition = 12;
-		testBoard.place(new Queen(Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.DARK),testedPiecePosition);
 		Set<Integer> expected = Set.of(19,26,33,40,21,30,39,5,3,20,28,36,44,52,60,13,14,15,4,11,10,9,8);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -207,11 +199,11 @@ public class MoveGeneratorTest {
 	public void testQueen12Friend33Enemy36Enemy39Friend14() {
 		int testedPiecePosition = 12;
 		
-		testBoard.place(new Queen(Color.DARK),testedPiecePosition);
-		testBoard.place(new Rook(Color.DARK),33);
-		testBoard.place(new Rook(Color.LIGHT),36);
-		testBoard.place(new Rook(Color.LIGHT),39);
-		testBoard.place(new Rook(Color.DARK),14);
+		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK),33);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT),36);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.LIGHT),39);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK),14);
 		Set<Integer> expected = Set.of(19,26,21,30,39,5,3,20,28,36,13,4,11,10,9,8);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -221,7 +213,7 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn8() {
 		int testedPiecePosition = 8;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
 		Set<Integer> expected = Set.of(16,24);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -231,8 +223,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn8Enemy17() {
 		int testedPiecePosition = 8;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),17);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),17);
 		Set<Integer> expected = Set.of(16,24,17);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -243,9 +235,9 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn8Enemy17Enemy15() {
 		int testedPiecePosition = 8;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),17);
-		testBoard.place(new Pawn(Color.DARK),15);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),17);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),15);
 		Set<Integer> expected = Set.of(16,24,17);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -255,10 +247,10 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Enemy19Enemy18Enemy20() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),19);
-		testBoard.place(new Pawn(Color.DARK),18);
-		testBoard.place(new Pawn(Color.DARK),20);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),19);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),18);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),20);
 		Set<Integer> expected = Set.of(18,20);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -268,8 +260,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Enemy19() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),19);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),19);
 		Set<Integer> expected = Set.of();
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -279,8 +271,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Friend19() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),19);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),19);
 		Set<Integer> expected = Set.of();
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -290,8 +282,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Friend27() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),27);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),27);
 		Set<Integer> expected = Set.of(19);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -301,8 +293,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Enemy27() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),27);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),27);
 		Set<Integer> expected = Set.of(19);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -313,7 +305,7 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn50() {
 		int testedPiecePosition = 50;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
 		Set<Integer> expected = Set.of(42,34);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -323,8 +315,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn48Enemy41() {
 		int testedPiecePosition = 48;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Knight(Color.LIGHT),41);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.LIGHT),41);
 		Set<Integer> expected = Set.of(40,32,41);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -334,9 +326,9 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn51Enemy42Enemy44() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),42);
-		testBoard.place(new Pawn(Color.LIGHT),44);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),42);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),44);
 		Set<Integer> expected = Set.of(43,35,42,44);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -346,9 +338,9 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn48Enemy41Enemy55() {
 		int testedPiecePosition = 48;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),41);
-		testBoard.place(new Pawn(Color.LIGHT),55);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),41);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),55);
 		Set<Integer> expected = Set.of(40,32,41);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -358,9 +350,9 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn11Enemy18Enemy20() {
 		int testedPiecePosition = 11;
-		testBoard.place(new Pawn(Color.LIGHT),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),18);
-		testBoard.place(new Pawn(Color.DARK),20);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),18);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),20);
 		Set<Integer> expected = Set.of(19,27,18,20);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -370,10 +362,10 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn51Enemy43Enemy42Enemy44() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),43);
-		testBoard.place(new Pawn(Color.LIGHT),42);
-		testBoard.place(new Pawn(Color.LIGHT),44);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),43);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),42);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.LIGHT),44);
 		Set<Integer> expected = Set.of(42,44);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -383,8 +375,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn51Enemy43() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),43);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),43);
 		Set<Integer> expected = Set.of();
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -394,8 +386,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn51Friend43() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),43);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),43);
 		Set<Integer> expected = Set.of();
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -405,8 +397,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testDarkPawn51Friend35() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.DARK),35);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),35);
 		Set<Integer> expected = Set.of(43);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -416,8 +408,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPawn51Enemy35() {
 		int testedPiecePosition = 51;
-		testBoard.place(new Pawn(Color.DARK),testedPiecePosition);
-		testBoard.place(new Pawn(Color.LIGHT),35);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),testedPiecePosition);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK),35);
 		Set<Integer> expected = Set.of(43);
 		Set<Integer> actual = generator.generateMoves(testedPiecePosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
@@ -427,8 +419,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void IsKingInCheckTestBishop() {
 		int kingPosition = 11;
-		testBoard.place(new King(Color.LIGHT),kingPosition);
-		testBoard.place(new Bishop(Color.DARK),25);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),kingPosition);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.DARK),25);
 		Boolean actual = generator.isKingInCheck(Color.LIGHT, testBoard, new Game());
 		assertEquals(true, actual);
 	}
@@ -436,8 +428,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void IsKingInCheckTestKnight() {
 		int kingPosition = 11;
-		testBoard.place(new King(Color.LIGHT),kingPosition);
-		testBoard.place(new Knight(Color.DARK),5);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),kingPosition);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK),5);
 		Boolean actual = generator.isKingInCheck(Color.LIGHT, testBoard, new Game());
 		assertEquals(true, actual);
 	}
@@ -445,57 +437,57 @@ public class MoveGeneratorTest {
 	@Test
 	public void IsKingInCheckTest2() {
 		int kingPosition = 11;
-		testBoard.place(new King(Color.LIGHT),kingPosition);
-		testBoard.place(new Bishop(Color.LIGHT),25);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),kingPosition);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT),25);
 		Boolean actual = generator.isKingInCheck(Color.LIGHT, testBoard, new Game());
 		assertEquals(false, actual);
 	}
 	
 	@Test
 	public void isAttackedByKnight() {
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new Knight(Color.DARK), 27);
-		boolean actual = generator.isAttackedBy(10, new Knight(Color.DARK), testBoard, new Game());
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.KNIGHT, Color.DARK), 27);
+		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.KNIGHT, Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
 	@Test
 	public void isAttackedByBishop() {
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new Rook(Color.DARK), 58);
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK), 58);
 		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.ROOK,Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
 	@Test
 	public void isAttackedByRook() {
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new Rook(Color.DARK), 58);
-		boolean actual = generator.isAttackedBy(10, new Rook(Color.DARK), testBoard, new Game());
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK), 58);
+		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.ROOK, Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
 	@Test
 	public void isAttackedByPawn() {
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new Pawn(Color.DARK), 17);
-		boolean actual = generator.isAttackedBy(10, new Pawn(Color.DARK), testBoard, new Game());
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.PAWN, Color.DARK), 17);
+		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.PAWN, Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
 	@Test
 	public void isAttackedByQueen() {
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new Queen(Color.DARK), 46);
-		boolean actual = generator.isAttackedBy(10, new Queen(Color.DARK), testBoard, new Game());
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.QUEEN, Color.DARK), 46);
+		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.QUEEN, Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
 	@Test
 	public void isAttackedByKing() { //TODO king logic to prevent them from getting close
-		testBoard.place(new Bishop(Color.LIGHT), 10);
-		testBoard.place(new King(Color.DARK), 2);
-		boolean actual = generator.isAttackedBy(10, new King(Color.DARK), testBoard, new Game());
+		testBoard.place(new ColoredPiece(PieceType.BISHOP, Color.LIGHT), 10);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.DARK), 2);
+		boolean actual = generator.isAttackedBy(10, new ColoredPiece(PieceType.KING, Color.DARK), testBoard, new Game());
 		assertEquals(true, actual);
 	}
 	
@@ -525,7 +517,7 @@ public class MoveGeneratorTest {
 	public void isKingNearby() {
 		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT), 10);
 		testBoard.place(new ColoredPiece(PieceType.KING, Color.DARK), 25);
-		boolean actual = generator.isKingNearby(10, 17, testBoard, Color.LIGHT);
+		boolean actual = generator.isKingNearby(17, testBoard, Color.LIGHT);
 		assertEquals(true, actual);
 	}
 		
@@ -543,8 +535,8 @@ public class MoveGeneratorTest {
 	@Test
 	public void kingCantGenerateMoveIntoChess() {
 		int kingPosition = 14;
-		testBoard.place(new King(Color.LIGHT),kingPosition);
-		testBoard.place(new Rook(Color.DARK),63);
+		testBoard.place(new ColoredPiece(PieceType.KING, Color.LIGHT),kingPosition);
+		testBoard.place(new ColoredPiece(PieceType.ROOK, Color.DARK),63);
 		Set<Integer> actual = generator.generateMoves(kingPosition, testBoard, new Game())
 				.stream().map(Move::getTo).collect(Collectors.toSet());
 		assertFalse(actual.contains(15) && actual.contains(7) && actual.contains(23));

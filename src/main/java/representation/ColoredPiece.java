@@ -1,7 +1,4 @@
-package ai.representation.piece;
-
-import ai.representation.Color;
-import ai.representation.PieceType;
+package representation;
 
 public class ColoredPiece {
 
@@ -104,8 +101,6 @@ public class ColoredPiece {
 		if (pieceType != other.pieceType)
 			return false;
 		return true;
-	}
-
-	
+	}	
 	
 }

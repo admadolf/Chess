@@ -1,13 +1,10 @@
-package ai.representation;
+package representation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 import ai.movegen.Move;
-import ai.representation.piece.ColoredPiece;
-import ai.representation.piece.EmptyPiece;
 
 public class Board {
 
@@ -37,7 +34,7 @@ public class Board {
 	
 	public Board(Map<Integer,ColoredPiece> boardMap) {
 		super();
-		this.board = new TreeMap<>(boardMap);
+		this.board = new HashMap<>(boardMap);
 	}
 
 	public static Board getASetuppedBoard() {
@@ -46,7 +43,7 @@ public class Board {
 		return board;
 	}
 	
-	public void initBoard() {
+	private void initBoard() {
 		board.put(56, new ColoredPiece(PieceType.ROOK,Color.DARK));
 		board.put(57, new ColoredPiece(PieceType.KNIGHT,Color.DARK));
 		board.put(58, new ColoredPiece(PieceType.BISHOP,Color.DARK));
@@ -69,7 +66,7 @@ public class Board {
 	}
 	
 	public void initEmptyBoard() {
-		IntStream.range(0, 64).forEach((i) -> board.put(i, new EmptyPiece()));
+		IntStream.range(0, 64).forEach((i) -> board.put(i, new ColoredPiece(PieceType.EMPTY, Color.EMPTY)));
 	}
 	
 	
@@ -138,7 +135,7 @@ public class Board {
 	}
 	
 	public ColoredPiece grabPieceAndCleanFrom(int from) {
-		return this.board.put(from, new EmptyPiece());
+		return this.board.put(from, new ColoredPiece(PieceType.EMPTY, Color.EMPTY));
 	}
 	
 	public void place(ColoredPiece piece , int to) {

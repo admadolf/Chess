@@ -3,9 +3,9 @@ package ai.eval;
 import java.util.List;
 
 import ai.movegen.MoveGenerator;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.piece.ColoredPiece;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
 
 public class MiniMaxEvaluateImpl implements Evaluate {
 
