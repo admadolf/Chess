@@ -1,4 +1,4 @@
-package ai.representation;
+package representation;
 
 public enum Color {
 	LIGHT("L"), DARK("D"), EMPTY("E");

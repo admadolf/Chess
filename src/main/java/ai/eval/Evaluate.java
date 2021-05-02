@@ -1,6 +1,6 @@
 package ai.eval;
 
-import ai.representation.Board;
+import representation.Board;
 
 public interface Evaluate {
 

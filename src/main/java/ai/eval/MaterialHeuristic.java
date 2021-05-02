@@ -3,8 +3,8 @@ package ai.eval;
 import java.util.List;
 
 import ai.movegen.MoveGenerator;
-import ai.representation.Board;
-import ai.representation.Color;
+import representation.Board;
+import representation.Color;
 
 public class MaterialHeuristic {
 
@@ -13,7 +13,7 @@ public class MaterialHeuristic {
 	
 	//https://www.chessprogramming.org/Evaluation#Linear_vs._Nonlinear
 	
-	public int evaluateMiniMax(Board position, MoveGenerator movegen) {
+	public int evaluatePositionMaterial(Board position, MoveGenerator movegen) {
 		Board board = Board.deepCopy(position);
 		List<Integer> side = movegen.getAll(Color.LIGHT, board);
 		List<Integer> oppositeSide = movegen.getAll(Color.DARK, board);

@@ -1,13 +1,13 @@
-package ui;
+package controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import game.Config;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import ui.App;
 
 public class SecondaryController implements Initializable{
 

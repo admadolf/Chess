@@ -7,13 +7,13 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.PieceType;
-import ai.representation.Vector;
-import ai.representation.piece.ColoredPiece;
-import game.Game;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.Game;
+import representation.MoveType;
+import representation.PieceType;
+import representation.Vector;
 
 /**
  * This
@@ -25,35 +25,35 @@ public class MoveGenerator {
 	/**
 	 * 
 	 * @param from
-	 * @param currentBoardState
+	 * @param currentBoard
 	 * @return possible moves for the piece on a given position
 	 */
-	public List<Move> generateMoves(Integer from, Board currentBoardState, Game game) {
+	public List<Move> generateMoves(Integer from, Board currentBoard, Game game) {
 		List<Move> moveList = new ArrayList<Move>();
-		ColoredPiece piece = currentBoardState.get(from);
+		ColoredPiece piece = currentBoard.get(from);
 		if(piece == null) {
 			throw new RuntimeException("Trying to allocate piece from non existing square with coordinate: " + from);
 		}
 		Color sideColor = piece.getColor();
 		switch (piece.getPieceType()) {
 		case PAWN:
-			moveList.addAll(generatePawnMoves(from, currentBoardState, game, sideColor));
+			moveList.addAll(generatePawnMoves(from, currentBoard, game, sideColor));
 			break;
 		case KNIGHT:
-			moveList.addAll(generateKnightMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateKnightMoves(from, currentBoard, sideColor));
 			break;
 		case BISHOP:
-			moveList.addAll(generateBishopMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
 			break;
 		case QUEEN:
-			moveList.addAll(generateBishopMoves(from, currentBoardState, sideColor));
-			moveList.addAll(generateRookMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
+			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
 			break;
 		case KING:
-			moveList.addAll(generateKingMoves(from, currentBoardState, game, sideColor));
+			moveList.addAll(generateKingMoves(from, currentBoard, game, sideColor));
 			break;
 		case ROOK:
-			moveList.addAll(generateRookMoves(from, currentBoardState, sideColor));
+			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
 			break;
 		default:
 			break;
@@ -341,34 +341,16 @@ public class MoveGenerator {
 		return false;
 	}
 	
-	private boolean isValidPawnDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		if (sameColumn(from, to)) {
-			return !offTheGrid(to) && Board.isEmptySquare(to, board);
-		} else if (columnDistance(from, to) < 2) {
-			return !offTheGrid(to) && Board.getColorOf(to, board) == sideColor;
-		}
-		return false;
-	}
-
 	private boolean isValidBishopMove(final int from, final int to, final Board board, final Color sideColor) {
 		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor) && rowDistance(from, to) < 2
 				&& columnDistance(from, to) < 2;
 	}
 	
-	private boolean isValidBishopDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		return !offTheGrid(to) && rowDistance(from, to) < 2
-				&& columnDistance(from, to) < 2;
-	}
-
 	private boolean isValidRookMove(final int from, final int to, final Board board, final Color sideColor) {
 		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor)
 				&& (sameRow(from, to) || sameColumn(from, to));
 	}
 	
-	private boolean isValidRookDefenseMove(final int from, final int to, final Board board, final Color sideColor) {
-		return !offTheGrid(to) && (sameRow(from, to) || sameColumn(from, to));
-	}
-
 	private boolean differentColor(Color colorOne, Color colorTwo) {
 		return colorOne != colorTwo;
 	}
@@ -419,20 +401,20 @@ public class MoveGenerator {
 	 */
 	private void setupEnPassant(Color sideColor, Move move, Board board) {
 		int doubleMoveArrivalSquare = move.getTo();
-		int enPassantOffset = 8;
 		int neighbourSquareOffset = 1;
 		Integer enPassantCandidate1Square = doubleMoveArrivalSquare-neighbourSquareOffset;
 		Integer enPassantCandidate2Square = doubleMoveArrivalSquare+neighbourSquareOffset;
-		ColoredPiece candidateToCapturePiece1 = board.get(enPassantCandidate1Square);
-		ColoredPiece candidateToCapturePiece2 = board.get(enPassantCandidate2Square);
-		if(candidateToCapturePiece1.getPieceType() == PieceType.PAWN && candidateToCapturePiece1.getColor().opposite() == sideColor && isValidPawnMove(move.getFrom(), enPassantCandidate1Square, board, sideColor)) {
-			move.setEnPassantCapturer1(enPassantCandidate1Square);
-			move.setEnPassantArrivalSquareAfterTake(sideColor == Color.LIGHT ? doubleMoveArrivalSquare - enPassantOffset : doubleMoveArrivalSquare + enPassantOffset);
-			move.setEnPassantToBeCaptured(doubleMoveArrivalSquare);
-			move.setMoveType(MoveType.ENPASSANTFLAG);
-		}
-		if(candidateToCapturePiece2.getPieceType() == PieceType.PAWN && candidateToCapturePiece2.getColor().opposite() == sideColor&& isValidPawnMove(move.getFrom(), enPassantCandidate2Square, board, sideColor)) {
-			move.setEnPassantCapturer2(enPassantCandidate2Square);
+		setupEnPassantCapturer(sideColor, move, board, doubleMoveArrivalSquare, enPassantCandidate1Square);
+		setupEnPassantCapturer(sideColor, move, board, doubleMoveArrivalSquare, enPassantCandidate2Square);
+	}
+
+
+	private void setupEnPassantCapturer(Color sideColor, Move move, Board board, int doubleMoveArrivalSquare,
+			Integer enPassantCandidateSquare) {
+		int enPassantOffset = 8;
+		ColoredPiece candidateToCapturePiece = board.get(enPassantCandidateSquare);
+		if(candidateToCapturePiece.getPieceType() == PieceType.PAWN && candidateToCapturePiece.getColor().opposite() == sideColor && isValidPawnMove(move.getFrom(), enPassantCandidateSquare, board, sideColor)) {
+			move.setEnPassantCapturer1(enPassantCandidateSquare);
 			move.setEnPassantArrivalSquareAfterTake(sideColor == Color.LIGHT ? doubleMoveArrivalSquare - enPassantOffset : doubleMoveArrivalSquare + enPassantOffset);
 			move.setEnPassantToBeCaptured(doubleMoveArrivalSquare);
 			move.setMoveType(MoveType.ENPASSANTFLAG);

@@ -1,4 +1,4 @@
-package ui;
+package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,13 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ai.movegen.Move;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.piece.ColoredPiece;
-import game.Config;
-import game.Game;
-import game.GameWorker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -24,6 +17,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.Game;
+import representation.MoveType;
+import ui.App;
 
 public class PrimaryController {
 
@@ -79,7 +78,7 @@ public class PrimaryController {
 			dehightlightMoveList();
 			if (validMove) {
 				redrawBoard(gameWorker.getGame());
-				LinkedList<ai.representation.Node> possibleNodes = gameWorker.getGame()
+				LinkedList<ai.search.Node> possibleNodes = gameWorker.getMachine()
 						.moveDark(Config.getInstance().getLookAheadDepth(), gameWorker.getGame().getLatestBoard());
 				Move computerMove = null;
 				if (possibleNodes.isEmpty()) {
@@ -88,7 +87,7 @@ public class PrimaryController {
 					computerMove = possibleNodes.peekLast().getPosition().getTransitionMoveFromPreviousBoard();
 					doAiMoveonUI(computerMove);
 					// one lookAheadDepth is enough to detect if light has any valid moves..
-					LinkedList<ai.representation.Node> possiblePlayerNodes = gameWorker.getGame().moveLight(1,
+					LinkedList<ai.search.Node> possiblePlayerNodes = gameWorker.getMachine().moveLight(1,
 							gameWorker.getGame().getLatestBoard());
 					if (possiblePlayerNodes.isEmpty()) {
 						showPopup(Color.LIGHT, gameWorker.getGame());

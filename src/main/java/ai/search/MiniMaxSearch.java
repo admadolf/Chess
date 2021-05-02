@@ -3,12 +3,10 @@ package ai.search;
 import java.util.List;
 
 import ai.eval.Evaluate;
-import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.Node;
-import game.Game;
+import representation.Board;
+import representation.Color;
+import representation.Game;
 
 public class MiniMaxSearch {
 
@@ -36,7 +34,7 @@ public class MiniMaxSearch {
 		MiniMaxSearch mini = new MiniMaxSearch();
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
-			Node node = Node.createNode(currDepth, parent, nextPosition, "mini");
+			Node node = Node.createNode(currDepth, parent, nextPosition, "maxi");
 			boolean isKingInCheck = movegen.isKingInCheck(Color.LIGHT, nextPosition, game);
 			if(isKingInCheck) {
 				continue;
@@ -70,7 +68,7 @@ public class MiniMaxSearch {
 		MiniMaxSearch maxi = new MiniMaxSearch();
 		int currDepth = ++prevDepth;
 		for (Board nextPosition : positions)  {
-			Node node = Node.createNode(currDepth, parent, nextPosition, "maxi");
+			Node node = Node.createNode(currDepth, parent, nextPosition, "mini");
 			boolean isKingInCheck = movegen.isKingInCheck(Color.DARK, nextPosition, game);
 			if(isKingInCheck) {
 				continue;

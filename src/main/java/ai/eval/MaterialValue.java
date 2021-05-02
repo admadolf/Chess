@@ -1,6 +1,6 @@
 package ai.eval;
 
-import ai.representation.piece.ColoredPiece;
+import representation.ColoredPiece;
 
 public class MaterialValue {
 

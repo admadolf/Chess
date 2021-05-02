@@ -1,24 +1,13 @@
-package game;
+package representation;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 
-import ai.eval.MiniMaxEvaluateImpl;
-import ai.eval.Evaluate;
 import ai.movegen.Move;
-import ai.movegen.MoveGenerator;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.Node;
-import ai.representation.PieceType;
-import ai.representation.piece.ColoredPiece;
-import ai.search.MiniMaxSearch;
 
 /**
  *  instantiate a game of chess, encapsulating ai setup,save information about game - castle rule, en passant, history of the PVNodes / board states / move states /  etc.
  *  this class should know the whole state space of the game, should take care of both human and ai players
- * @author konek
+ * @author adam adolf
  *
  */
 public class Game {
@@ -31,18 +20,10 @@ public class Game {
 	
 	private Board[] state = new Board[400];
 
-	private MoveGenerator generator = new MoveGenerator();
-	
-	private Evaluate lightEvaluator = new MiniMaxEvaluateImpl();
-	
-	private MiniMaxSearch search = new MiniMaxSearch();
-	
-	private Evaluate darkEvaluator = new MiniMaxEvaluateImpl();
-	
 	public Game() {
 		super();
-		Board.getASetuppedBoard();
-		state[0] = Board.getASetuppedBoard();
+		Board startBoard = Board.getASetuppedBoard();
+		state[0] = startBoard;
 	}
 
 	public Board[] getState() {
@@ -55,46 +36,6 @@ public class Game {
 			++i;
 		}
 		 return state[i];
-	}
-	
-	public LinkedList<Node> moveLight(int lookAheadDepth, Board board) {
-		Node pvTree = new Node();
-		pvTree.setParent(null);
-		pvTree.setPosition(board);
-		pvTree.setDepth(0);
-		
-		search.maxi(lookAheadDepth, this.lightEvaluator, board, pvTree, this.generator, this);
-		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
-	}
-	
-	public LinkedList<Node> moveDark(int lookAheadDepth, Board board) {
-		Node pvTree = new Node();
-		pvTree.setParent(null);
-		pvTree.setPosition(board);
-		pvTree.setDepth(0);
-		
-		search.mini(lookAheadDepth, this.darkEvaluator, board, pvTree, this.generator, this);
-		return pvTree.getPvNodes().isEmpty() ? pvTree.getChildren() : pvTree.getPvNodes();
-	}
-	
-	public void setGenerator(MoveGenerator generator) {
-		this.generator = generator;
-	}
-
-	public Evaluate getLightEvaluator() {
-		return lightEvaluator;
-	}
-
-	public void setLightEvaluator(Evaluate lightEvaluator) {
-		this.lightEvaluator = lightEvaluator;
-	}
-
-	public Evaluate getDarkEvaluator() {
-		return darkEvaluator;
-	}
-
-	public void setDarkEvaluator(Evaluate darkEvaluator) {
-		this.darkEvaluator = darkEvaluator;
 	}
 	
 	public boolean calculateCanCastle(Color color, MoveType moveType) {

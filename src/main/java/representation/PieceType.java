@@ -1,4 +1,4 @@
-package ai.representation;
+package representation;
 
 public enum PieceType {
 	ROOK("R"), KNIGHT("N"), BISHOP("B"), QUEEN("Q"), KING("K"), PAWN("P"), EMPTY("E");

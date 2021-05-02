@@ -3,9 +3,9 @@ package ai.eval;
 import java.util.HashMap;
 import java.util.Map;
 
-import ai.representation.Color;
-import ai.representation.PieceType;
-import ai.representation.piece.ColoredPiece;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.PieceType;
 
 public class PieceSquareTable {
 

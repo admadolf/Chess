@@ -7,9 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ai.movegen.Move;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
+import representation.Board;
+import representation.Color;
+import representation.Game;
+import representation.MoveType;
 
 public class GameTest {
 

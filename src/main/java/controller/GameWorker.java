@@ -1,19 +1,23 @@
-package game;
+package controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ai.machine.Machine;
 import ai.movegen.Move;
 import ai.movegen.MoveGenerator;
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
+import representation.Board;
+import representation.Color;
+import representation.Game;
+import representation.MoveType;
 
 public class GameWorker{
 
 	private MoveGenerator moveGenerator;
 	
 	private Game game;
+	
+	private Machine machine;
 	
 	private Color playerColor;
 	
@@ -25,6 +29,7 @@ public class GameWorker{
     	this.game = new Game();
     	this.moveGenerator = new MoveGenerator();
     	this.possibleMoves = new ArrayList<Move>();
+    	this.machine = new Machine(game);
 	}
 	
 	public GameWorker(Color playerColor) {
@@ -108,5 +113,13 @@ public class GameWorker{
 	public void setPlayerColor(Color playerColor) {
 		this.playerColor = playerColor;
 	}
-	
+
+	public Machine getMachine() {
+		return machine;
+	}
+
+	public void setMachine(Machine machine) {
+		this.machine = machine;
+	}
+
 }

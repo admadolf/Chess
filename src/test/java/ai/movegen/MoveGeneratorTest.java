@@ -13,12 +13,12 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ai.representation.Board;
-import ai.representation.Color;
-import ai.representation.MoveType;
-import ai.representation.PieceType;
-import ai.representation.piece.ColoredPiece;
-import game.Game;
+import representation.Board;
+import representation.Color;
+import representation.ColoredPiece;
+import representation.Game;
+import representation.MoveType;
+import representation.PieceType;
 
 public class MoveGeneratorTest {
 

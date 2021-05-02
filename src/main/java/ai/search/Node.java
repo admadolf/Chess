@@ -1,12 +1,12 @@
-package ai.representation;
+package ai.search;
 
 import java.util.LinkedList;
+
+import representation.Board;
 
 
 public class Node implements Comparable<Node>{
 
-	public static int nodeCounter = 0;
-	
 	private Integer depth = null;
 	
 	private Board position = null;
@@ -24,7 +24,6 @@ public class Node implements Comparable<Node>{
 	
 	public Node() {
 		super();
-		nodeCounter++;
 	}
 
 	public boolean isRootNode() {
@@ -62,12 +61,11 @@ public class Node implements Comparable<Node>{
 		builder.append("score ").append(score).append(System.lineSeparator());
 		builder.append(miniOrMaxi).append(System.lineSeparator());
 		builder.append(position.toString());
-		if (!children.isEmpty()) {
+		/*if (!children.isEmpty()) {
 			for (Node child : children) {
 				builder.append(child.toString());
 			}
-		}
-		builder.append("node count: " + nodeCounter).append(System.lineSeparator());
+		}*/
 		return builder.toString();
 	}
 

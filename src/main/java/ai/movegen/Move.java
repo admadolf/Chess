@@ -1,7 +1,7 @@
 package ai.movegen;
 
-import ai.representation.MoveType;
-import ai.representation.piece.ColoredPiece;
+import representation.ColoredPiece;
+import representation.MoveType;
 
 public class Move{
 

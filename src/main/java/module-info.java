@@ -1,15 +1,15 @@
 module chess {
 	exports ai.eval;
 	exports ai.movegen;
-	exports ai.representation.piece;
 	exports ai.search;
-	exports ai.representation;
-	exports game;
+	exports ai.machine;
+	exports controller;
 	requires javafx.graphics;
 	requires javafx.fxml;
 	
-    requires javafx.controls;
-    opens ui to javafx.fxml;
+    requires transitive javafx.controls;
+    exports representation;
+    opens controller to javafx.fxml;
     exports ui;
 
 
