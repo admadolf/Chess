@@ -60,7 +60,7 @@ public class GameWorker{
 		}
 	}
 	
-	public boolean finalizeMoveIfValid(Integer from, Integer to) {
+	public boolean finalizePlayerMoveIfValid(Integer from, Integer to) {
 		for (Move move : possibleMoves) {
 			boolean nonCastleMove = from.equals(move.getFrom()) && to.equals(move.getTo());
 			boolean castleMove = move.getMoveType() == MoveType.CASTLELONG || move.getMoveType() == MoveType.CASTLESHORT && move.getCastleKingFrom() == from && move.getCastleRookFrom() == to;
@@ -72,6 +72,11 @@ public class GameWorker{
 		}
 		possibleMoves.clear();
 		return false;
+	}
+	
+	public void finalizeAIMove(Move move) {
+		Board nextBoard = Board.transposePositionToNewBoardInstance(this.getGame().getLatestBoard(), move);
+		this.getGame().addPositionToGame(nextBoard);
 	}
 
 	public Boolean getIsPlayerMove() {
