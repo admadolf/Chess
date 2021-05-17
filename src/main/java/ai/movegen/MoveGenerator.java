@@ -43,17 +43,16 @@ public class MoveGenerator {
 			moveList.addAll(generateKnightMoves(from, currentBoard, sideColor));
 			break;
 		case BISHOP:
-			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
+			moveList.addAll(generateSlidingPieceMoves(from, currentBoard, sideColor));
 			break;
 		case QUEEN:
-			moveList.addAll(generateBishopMoves(from, currentBoard, sideColor));
-			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
+			moveList.addAll(generateSlidingPieceMoves(from, currentBoard, sideColor));
 			break;
 		case KING:
 			moveList.addAll(generateKingMoves(from, currentBoard, game, sideColor));
 			break;
 		case ROOK:
-			moveList.addAll(generateRookMoves(from, currentBoard, sideColor));
+			moveList.addAll(generateSlidingPieceMoves(from, currentBoard, sideColor));
 			break;
 		default:
 			break;
@@ -96,7 +95,7 @@ public class MoveGenerator {
 			int tmpFrom = from;
 			int to = tmpFrom + vector;
 			Move move = new Move(from, to, currentBoardState.get(from), currentBoardState.get(to));
-			if (isValidBishopMove(tmpFrom, to, currentBoardState, sideColor) && !isKingNearby(to, currentBoardState, sideColor) 
+			if (isValidSlidingPieceMove(tmpFrom, to, currentBoardState, sideColor) && !isKingNearby(to, currentBoardState, sideColor) 
 					&& !isKingInCheck(sideColor, Board.transposePositionToNewBoardInstance(currentBoardState, move), game)) {
 				moveList.add(move);
 			}
@@ -105,12 +104,12 @@ public class MoveGenerator {
 	}
 
 
-	private List<Move> generateRookMoves(Integer from, Board currentBoardState, Color sideColor) {
+	private List<Move> generateSlidingPieceMoves(Integer from, Board currentBoardState, Color sideColor) {
 		List<Move> moveList = new ArrayList<Move>();
 		for (Integer vector : getMoveVectors(currentBoardState.get(from))) {
 			Integer tmpFrom = from;
 			Integer to = tmpFrom + vector;
-			while (isValidRookMove(tmpFrom, to, currentBoardState, sideColor)) {
+			while (isValidSlidingPieceMove(tmpFrom, to, currentBoardState, sideColor)) {
 				moveList.add(new Move(from, to, currentBoardState.get(from), currentBoardState.get(to)));
 				if (Board.getColorOf(to, currentBoardState) == sideColor.opposite()) {
 					break;
@@ -176,25 +175,6 @@ public class MoveGenerator {
 		}
 		return moveList;
 	}
-
-
-	private List<Move> generateBishopMoves(Integer from, Board currentBoardState, Color sideColor) {
-		List<Move> moveList = new ArrayList<Move>();
-		for (int vector : getMoveVectors(currentBoardState.get(from))) {
-			int tmpFrom = from;
-			int to = tmpFrom + vector;
-			while (isValidBishopMove(tmpFrom, to, currentBoardState, sideColor)) {
-				moveList.add(new Move(from, to, currentBoardState.get(from), currentBoardState.get(to)));
-				if (Board.getColorOf(to, currentBoardState) == sideColor.opposite()) {
-					break;
-				}
-				tmpFrom = to;
-				to += vector;
-			}
-		}
-		return moveList;
-	}
-
 
 	private Board generateCastlePreconditionChecked(Board currentBoardState, Game game, Color sideColor, Move castleMove) {
 		boolean castlePrecondition = !isKingInCheck(sideColor, currentBoardState, game) && 
@@ -341,14 +321,9 @@ public class MoveGenerator {
 		return false;
 	}
 	
-	private boolean isValidBishopMove(final int from, final int to, final Board board, final Color sideColor) {
+	private boolean isValidSlidingPieceMove(final int from, final int to, final Board board, final Color sideColor) {
 		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor) && rowDistance(from, to) < 2
 				&& columnDistance(from, to) < 2;
-	}
-	
-	private boolean isValidRookMove(final int from, final int to, final Board board, final Color sideColor) {
-		return !offTheGrid(to) && differentColor(Board.getColorOf(to, board), sideColor)
-				&& (sameRow(from, to) || sameColumn(from, to));
 	}
 	
 	private boolean differentColor(Color colorOne, Color colorTwo) {

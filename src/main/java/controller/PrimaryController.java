@@ -17,7 +17,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import representation.Board;
 import representation.Color;
 import representation.ColoredPiece;
 import representation.Game;
@@ -74,7 +73,7 @@ public class PrimaryController {
 		} else {
 			Button moveEndTile = (Button) event.getSource();
 			Integer moveEndTileId = idToInt(moveEndTile);
-			boolean validMove = gameWorker.finalizeMoveIfValid(idToInt(moveStartTile), moveEndTileId);
+			boolean validMove = gameWorker.finalizePlayerMoveIfValid(idToInt(moveStartTile), moveEndTileId);
 			dehightlightMoveList();
 			if (validMove) {
 				redrawBoard(gameWorker.getGame());
@@ -85,7 +84,8 @@ public class PrimaryController {
 					showPopup(Color.DARK, gameWorker.getGame());
 				} else {
 					computerMove = possibleNodes.peekLast().getPosition().getTransitionMoveFromPreviousBoard();
-					doAiMoveonUI(computerMove);
+					gameWorker.finalizeAIMove(computerMove);
+					doAIMoveOnUI(computerMove);
 					// one lookAheadDepth is enough to detect if light has any valid moves..
 					LinkedList<ai.search.Node> possiblePlayerNodes = gameWorker.getMachine().moveLight(1,
 							gameWorker.getGame().getLatestBoard());
@@ -168,8 +168,7 @@ public class PrimaryController {
 		this.gameWorker = gameWorker;
 	}
 
-	public void doAiMoveonUI(Move move) {
-		Board nextBoard = Board.transposePositionToNewBoardInstance(gameWorker.getGame().getLatestBoard(), move);
+	public void doAIMoveOnUI(Move move) {
 		boolean castlingMove = move.getMoveType() == MoveType.CASTLELONG || move.getMoveType() == MoveType.CASTLESHORT;
 		if (!castlingMove) {
 			getButton(move.getFrom()).getStyleClass().clear();
@@ -182,7 +181,6 @@ public class PrimaryController {
 			getButton(move.getCastleRookTo()).getStyleClass().clear();
 			getButton(move.getCastleRookTo()).getStyleClass().add("shiny-orange");
 		}
-		gameWorker.getGame().addPositionToGame(nextBoard);
 		redrawBoard(gameWorker.getGame());
 	}
 
